@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rate limits &amp; quotas | Example Docs</title>
+<style>
+.c0{margin:0px;padding:0px;color:#9a9d7e}
+.c1{margin:1px;padding:1px;color:#938bf3}
+.c2{margin:2px;padding:2px;color:#99cbdf}
+.c3{margin:3px;padding:3px;color:#43061b}
+.c4{margin:4px;padding:4px;color:#798002}
+.c5{margin:5px;padding:5px;color:#67ead8}
+.c6{margin:6px;padding:6px;color:#5799d0}
+.c7{margin:7px;padding:0px;color:#c62c82}
+.c8{margin:8px;padding:1px;color:#3bad60}
+.c9{margin:9px;padding:2px;color:#d53e60}
+.c10{margin:10px;padding:3px;color:#2a6d61}
+.c11{margin:11px;padding:4px;color:#9c115b}
+.c12{margin:12px;padding:5px;color:#908b23}
+.c13{margin:13px;padding:6px;color:#466330}
+.c14{margin:14px;padding:0px;color:#8aabaf}
+.c15{margin:15px;padding:1px;color:#65f6a9}
+.c16{margin:16px;padding:2px;color:#868140}
+.c17{margin:17px;padding:3px;color:#cdc792}
+.c18{margin:18px;padding:4px;color:#420614}
+.c19{margin:19px;padding:5px;color:#9ae523}
+.c20{margin:20px;padding:6px;color:#bbfa8b}
+.c21{margin:21px;padding:0px;color:#06f215}
+.c22{margin:22px;padding:1px;color:#4380c4}
+.c23{margin:23px;padding:2px;color:#60001f}
+.c24{margin:24px;padding:3px;color:#effb1e}
+.c25{margin:25px;padding:4px;color:#28a3fc}
+.c26{margin:26px;padding:5px;color:#68ebfa}
+.c27{margin:27px;padding:6px;color:#1fc5c0}
+.c28{margin:28px;padding:0px;color:#d65635}
+.c29{margin:29px;padding:1px;color:#8dd690}
+.c30{margin:30px;padding:2px;color:#e862e7}
+.c31{margin:31px;padding:3px;color:#91cdf8}
+.c32{margin:32px;padding:4px;color:#1c0623}
+.c33{margin:33px;padding:5px;color:#ced2a0}
+.c34{margin:34px;padding:6px;color:#66ccdb}
+.c35{margin:35px;padding:0px;color:#19d485}
+.c36{margin:36px;padding:1px;color:#bbc654}
+.c37{margin:37px;padding:2px;color:#86f847}
+.c38{margin:38px;padding:3px;color:#04e964}
+.c39{margin:39px;padding:4px;color:#ad5ad3}
+.c40{margin:40px;padding:5px;color:#159c19}
+.c41{margin:41px;padding:6px;color:#1decd1}
+.c42{margin:42px;padding:0px;color:#c9c556}
+.c43{margin:43px;padding:1px;color:#098bcd}
+.c44{margin:44px;padding:2px;color:#f94ddc}
+.c45{margin:45px;padding:3px;color:#0c36ff}
+.c46{margin:46px;padding:4px;color:#3be5f9}
+.c47{margin:47px;padding:5px;color:#ac49f6}
+.c48{margin:48px;padding:6px;color:#9e0346}
+.c49{margin:49px;padding:0px;color:#092dda}
+.c50{margin:50px;padding:1px;color:#e7f60a}
+.c51{margin:51px;padding:2px;color:#28956b}
+.c52{margin:52px;padding:3px;color:#f27511}
+.c53{margin:53px;padding:4px;color:#5f6b72}
+.c54{margin:54px;padding:5px;color:#163d20}
+.c55{margin:55px;padding:6px;color:#ba14ea}
+.c56{margin:56px;padding:0px;color:#baa969}
+.c57{margin:57px;padding:1px;color:#034847}
+.c58{margin:58px;padding:2px;color:#8d267b}
+.c59{margin:59px;padding:3px;color:#3a86c3}
+.c60{margin:60px;padding:4px;color:#1c8306}
+.c61{margin:61px;padding:5px;color:#04788f}
+.c62{margin:62px;padding:6px;color:#202953}
+.c63{margin:63px;padding:0px;color:#de688e}
+.c64{margin:64px;padding:1px;color:#2e63b8}
+.c65{margin:65px;padding:2px;color:#0652c3}
+.c66{margin:66px;padding:3px;color:#661feb}
+.c67{margin:67px;padding:4px;color:#e5dc87}
+.c68{margin:68px;padding:5px;color:#cd6f16}
+.c69{margin:69px;padding:6px;color:#d70720}
+.c70{margin:70px;padding:0px;color:#a18bbe}
+.c71{margin:71px;padding:1px;color:#88ac74}
+.c72{margin:72px;padding:2px;color:#c3095a}
+.c73{margin:73px;padding:3px;color:#9f2166}
+.c74{margin:74px;padding:4px;color:#76e391}
+.c75{margin:75px;padding:5px;color:#c65eb3}
+.c76{margin:76px;padding:6px;color:#13b35b}
+.c77{margin:77px;padding:0px;color:#6ea63e}
+.c78{margin:78px;padding:1px;color:#4fb0ad}
+.c79{margin:79px;padding:2px;color:#f453c4}
+.c80{margin:80px;padding:3px;color:#a17935}
+.c81{margin:81px;padding:4px;color:#468f73}
+.c82{margin:82px;padding:5px;color:#5eb9f8}
+.c83{margin:83px;padding:6px;color:#215514}
+.c84{margin:84px;padding:0px;color:#5b491f}
+.c85{margin:85px;padding:1px;color:#5b23cb}
+.c86{margin:86px;padding:2px;color:#073534}
+.c87{margin:87px;padding:3px;color:#5fa72a}
+.c88{margin:88px;padding:4px;color:#6d2c2c}
+.c89{margin:89px;padding:5px;color:#6a4940}
+.c90{margin:90px;padding:6px;color:#d34b7a}
+.c91{margin:91px;padding:0px;color:#96d2d5}
+.c92{margin:92px;padding:1px;color:#e0fbbd}
+.c93{margin:93px;padding:2px;color:#68d004}
+.c94{margin:94px;padding:3px;color:#6f5783}
+.c95{margin:95px;padding:4px;color:#ba0309}
+.c96{margin:96px;padding:5px;color:#59fe6b}
+.c97{margin:97px;padding:6px;color:#7f7c2f}
+.c98{margin:98px;padding:0px;color:#764e0b}
+.c99{margin:99px;padding:1px;color:#9abe5c}
+.c100{margin:100px;padding:2px;color:#8c3231}
+.c101{margin:101px;padding:3px;color:#513264}
+.c102{margin:102px;padding:4px;color:#a5b8ca}
+.c103{margin:103px;padding:5px;color:#120ffd}
+.c104{margin:104px;padding:6px;color:#bde91e}
+.c105{margin:105px;padding:0px;color:#d4dfc0}
+.c106{margin:106px;padding:1px;color:#16e759}
+.c107{margin:107px;padding:2px;color:#72b0da}
+.c108{margin:108px;padding:3px;color:#ba9ee6}
+.c109{margin:109px;padding:4px;color:#332c65}
+.c110{margin:110px;padding:5px;color:#835138}
+.c111{margin:111px;padding:6px;color:#6b0d88}
+.c112{margin:112px;padding:0px;color:#158924}
+.c113{margin:113px;padding:1px;color:#4d2388}
+.c114{margin:114px;padding:2px;color:#4e5438}
+.c115{margin:115px;padding:3px;color:#4c5e87}
+.c116{margin:116px;padding:4px;color:#5feb49}
+.c117{margin:117px;padding:5px;color:#a9f147}
+.c118{margin:118px;padding:6px;color:#3ee3d0}
+.c119{margin:119px;padding:0px;color:#e1348f}
+.c120{margin:120px;padding:1px;color:#06058c}
+.c121{margin:121px;padding:2px;color:#5ef362}
+.c122{margin:122px;padding:3px;color:#60b21c}
+.c123{margin:123px;padding:4px;color:#a23e3b}
+.c124{margin:124px;padding:5px;color:#8308a8}
+.c125{margin:125px;padding:6px;color:#a6cacb}
+.c126{margin:126px;padding:0px;color:#050a88}
+.c127{margin:127px;padding:1px;color:#ad8d72}
+.c128{margin:128px;padding:2px;color:#7c07e2}
+.c129{margin:129px;padding:3px;color:#7d5f31}
+.c130{margin:130px;padding:4px;color:#3f4ef2}
+.c131{margin:131px;padding:5px;color:#2ec18c}
+.c132{margin:132px;padding:6px;color:#229fb9}
+.c133{margin:133px;padding:0px;color:#5883a2}
+.c134{margin:134px;padding:1px;color:#e9b88a}
+.c135{margin:135px;padding:2px;color:#15e087}
+.c136{margin:136px;padding:3px;color:#bf75b8}
+.c137{margin:137px;padding:4px;color:#a91968}
+.c138{margin:138px;padding:5px;color:#f5a2df}
+.c139{margin:139px;padding:6px;color:#ae5a90}
+.c140{margin:140px;padding:0px;color:#bd4af6}
+.c141{margin:141px;padding:1px;color:#0fa410}
+.c142{margin:142px;padding:2px;color:#1e2df5}
+.c143{margin:143px;padding:3px;color:#0dc027}
+.c144{margin:144px;padding:4px;color:#7980bb}
+.c145{margin:145px;padding:5px;color:#88d835}
+.c146{margin:146px;padding:6px;color:#e84152}
+.c147{margin:147px;padding:0px;color:#ff3fbf}
+.c148{margin:148px;padding:1px;color:#415e7f}
+.c149{margin:149px;padding:2px;color:#bf5754}
+.c150{margin:150px;padding:3px;color:#d448cf}
+.c151{margin:151px;padding:4px;color:#d3d30f}
+.c152{margin:152px;padding:5px;color:#260e66}
+.c153{margin:153px;padding:6px;color:#d22eaa}
+.c154{margin:154px;padding:0px;color:#8f834b}
+.c155{margin:155px;padding:1px;color:#d0f7f4}
+.c156{margin:156px;padding:2px;color:#fc74fd}
+.c157{margin:157px;padding:3px;color:#e190fb}
+.c158{margin:158px;padding:4px;color:#372f11}
+.c159{margin:159px;padding:5px;color:#fc832c}
+.c160{margin:160px;padding:6px;color:#08c64d}
+.c161{margin:161px;padding:0px;color:#92130e}
+.c162{margin:162px;padding:1px;color:#28de6c}
+.c163{margin:163px;padding:2px;color:#9072f9}
+.c164{margin:164px;padding:3px;color:#c31111}
+.c165{margin:165px;padding:4px;color:#e15ce3}
+.c166{margin:166px;padding:5px;color:#d02684}
+.c167{margin:167px;padding:6px;color:#e1a5ff}
+.c168{margin:168px;padding:0px;color:#0f2915}
+.c169{margin:169px;padding:1px;color:#c8956c}
+.c170{margin:170px;padding:2px;color:#bdc0e3}
+.c171{margin:171px;padding:3px;color:#fc609e}
+.c172{margin:172px;padding:4px;color:#40b4f7}
+.c173{margin:173px;padding:5px;color:#3ee0df}
+.c174{margin:174px;padding:6px;color:#4113fd}
+.c175{margin:175px;padding:0px;color:#41e30b}
+.c176{margin:176px;padding:1px;color:#a503ae}
+.c177{margin:177px;padding:2px;color:#4655a5}
+.c178{margin:178px;padding:3px;color:#1a2dc2}
+.c179{margin:179px;padding:4px;color:#9f7e03}
+.c180{margin:180px;padding:5px;color:#28d631}
+.c181{margin:181px;padding:6px;color:#417d91}
+.c182{margin:182px;padding:0px;color:#cd38a0}
+.c183{margin:183px;padding:1px;color:#039399}
+.c184{margin:184px;padding:2px;color:#c52fc5}
+.c185{margin:185px;padding:3px;color:#744663}
+.c186{margin:186px;padding:4px;color:#c4952c}
+.c187{margin:187px;padding:5px;color:#eab2b3}
+.c188{margin:188px;padding:6px;color:#52d55f}
+.c189{margin:189px;padding:0px;color:#f40dc5}
+.c190{margin:190px;padding:1px;color:#24dfe3}
+.c191{margin:191px;padding:2px;color:#8333db}
+.c192{margin:192px;padding:3px;color:#83313d}
+.c193{margin:193px;padding:4px;color:#e9b872}
+.c194{margin:194px;padding:5px;color:#e3c556}
+.c195{margin:195px;padding:6px;color:#a68542}
+.c196{margin:196px;padding:0px;color:#bd7abb}
+.c197{margin:197px;padding:1px;color:#816afe}
+.c198{margin:198px;padding:2px;color:#0fd25d}
+.c199{margin:199px;padding:3px;color:#82e687}
+</style>
+<script>window.__STATE__ = {"items":[{"id":0,"v":"2a5a92db1f8e"},{"id":1,"v":"fb50939a0224"},{"id":2,"v":"af83cd00e6ac"},{"id":3,"v":"f0b6726075a6"},{"id":4,"v":"8cacd1af113e"},{"id":5,"v":"e477097bb3cf"},{"id":6,"v":"f3a81efc9b02"},{"id":7,"v":"766d5567db5a"},{"id":8,"v":"ffdf285ce55f"},{"id":9,"v":"b66261704678"},{"id":10,"v":"4af906bfe3f9"},{"id":11,"v":"171cfecbe7aa"},{"id":12,"v":"f9ee8285909d"},{"id":13,"v":"fdbe0a353d88"},{"id":14,"v":"f85890887cb5"},{"id":15,"v":"d77a4e07f16a"},{"id":16,"v":"a8c1ccf139eb"},{"id":17,"v":"db06292c19de"},{"id":18,"v":"2f5e366d4c75"},{"id":19,"v":"8803b7806372"},{"id":20,"v":"a2bef136a7e1"},{"id":21,"v":"6fa51cd4766d"},{"id":22,"v":"ca5751658139"},{"id":23,"v":"804aa5d684b9"},{"id":24,"v":"4aa43087259a"},{"id":25,"v":"ab828ad76a8a"},{"id":26,"v":"4f8c14957a2a"},{"id":27,"v":"6407549e0737"},{"id":28,"v":"a8cd4f56eb8c"},{"id":29,"v":"a163413ad988"},{"id":30,"v":"0afe8aa003b0"},{"id":31,"v":"c7ce64cae643"},{"id":32,"v":"94a1766364af"},{"id":33,"v":"79a22dd58ff9"},{"id":34,"v":"0deac995fa64"},{"id":35,"v":"3d562f4fe072"},{"id":36,"v":"e823da858082"},{"id":37,"v":"35772e4cd227"},{"id":38,"v":"f27a6249ca5e"},{"id":39,"v":"e9b4c3da2ef6"},{"id":40,"v":"ed25b2a409a8"},{"id":41,"v":"e5a340d3a6b5"},{"id":42,"v":"1f3fdabc287c"},{"id":43,"v":"eae35798978a"},{"id":44,"v":"576a39edd0ae"},{"id":45,"v":"f5d447136793"},{"id":46,"v":"4a6550555a67"},{"id":47,"v":"4b543140bb2d"},{"id":48,"v":"a1f32dfd780e"},{"id":49,"v":"286d64eed1a7"},{"id":50,"v":"7d337ac392a1"},{"id":51,"v":"a2498cb7bee1"},{"id":52,"v":"73a75247b71d"},{"id":53,"v":"31c15c2ce1be"},{"id":54,"v":"ef7532bd0bbe"},{"id":55,"v":"a3bc8d0d3b42"},{"id":56,"v":"b869f3c4690f"},{"id":57,"v":"7128232cc275"},{"id":58,"v":"29ba1f01b11e"},{"id":59,"v":"ef37247d9cd0"},{"id":60,"v":"2bf3afac1af9"},{"id":61,"v":"fb2333297cd6"},{"id":62,"v":"c4d2cc7cacf7"},{"id":63,"v":"25f9e90a7475"},{"id":64,"v":"01b06fa21a8f"},{"id":65,"v":"2a8edd1f18c1"},{"id":66,"v":"2d1c3ebd942f"},{"id":67,"v":"6c80dd1ae68f"},{"id":68,"v":"e2ba0a47fb77"},{"id":69,"v":"dd0bd8705438"},{"id":70,"v":"3f8568182ed5"},{"id":71,"v":"49b767578f05"},{"id":72,"v":"260ee4def168"},{"id":73,"v":"39c49b7ee8b7"},{"id":74,"v":"353ed8668d40"},{"id":75,"v":"677c5c604e94"},{"id":76,"v":"6fea15232f25"},{"id":77,"v":"05d9088d0698"},{"id":78,"v":"8fd7fe413cf5"},{"id":79,"v":"651011e564a5"},{"id":80,"v":"623060abe17b"},{"id":81,"v":"b08993f2583a"},{"id":82,"v":"37c599d3834d"},{"id":83,"v":"602be181ab49"},{"id":84,"v":"3a09dc6406f6"},{"id":85,"v":"cb11fed9f63a"},{"id":86,"v":"a2575f1c3ed1"},{"id":87,"v":"4baf1b732ec9"},{"id":88,"v":"aa9086220947"},{"id":89,"v":"3e5302147cc5"},{"id":90,"v":"2fa1326c5f74"},{"id":91,"v":"25913488165b"},{"id":92,"v":"fdc6eb0486b0"},{"id":93,"v":"de2afde12e2a"},{"id":94,"v":"3bc54fb55cd9"},{"id":95,"v":"9c45ae364287"},{"id":96,"v":"4410e7052748"},{"id":97,"v":"16d23dcbd52e"},{"id":98,"v":"257f86992498"},{"id":99,"v":"013034a1a711"},{"id":100,"v":"ffa14443ee11"},{"id":101,"v":"ad476d07530c"},{"id":102,"v":"6a56ae6746ec"},{"id":103,"v":"bb2c5c178d03"},{"id":104,"v":"b188bdc83a97"},{"id":105,"v":"f8b72eee7c57"},{"id":106,"v":"200d4cfa7e83"},{"id":107,"v":"b989e176e760"},{"id":108,"v":"aec4a34bc722"},{"id":109,"v":"7abe993e5e72"},{"id":110,"v":"356fb7af3947"},{"id":111,"v":"3d02447dbdc4"},{"id":112,"v":"37a69d705e89"},{"id":113,"v":"9cd6fd852b86"},{"id":114,"v":"664cbab88ea6"},{"id":115,"v":"b8e03425c087"},{"id":116,"v":"b941b853099d"},{"id":117,"v":"fed87aa5b926"},{"id":118,"v":"c5ec7e08373d"},{"id":119,"v":"61bac55bebb1"},{"id":120,"v":"9789bf14ab03"},{"id":121,"v":"cb318b8d2eaf"},{"id":122,"v":"45128939e5bf"},{"id":123,"v":"5b7c7d5556fa"},{"id":124,"v":"30367b2e3f47"},{"id":125,"v":"b165cbbe718e"},{"id":126,"v":"f516e163f6e1"},{"id":127,"v":"af2a360ae58b"},{"id":128,"v":"b48e5a19bf39"},{"id":129,"v":"be825d49b417"},{"id":130,"v":"a870a6a61edd"},{"id":131,"v":"e1151b38fde3"},{"id":132,"v":"2d688bca88d9"},{"id":133,"v":"2841743d08d4"},{"id":134,"v":"18a2e037469a"},{"id":135,"v":"576275351951"},{"id":136,"v":"10deae9c5790"},{"id":137,"v":"eaf5e470f2c6"},{"id":138,"v":"09b76ac3b3da"},{"id":139,"v":"c07d544c061e"},{"id":140,"v":"512b85dc3b22"},{"id":141,"v":"3dfa8fbdb7db"},{"id":142,"v":"6c47fd377791"},{"id":143,"v":"bb84c8559bda"},{"id":144,"v":"d810525179e4"},{"id":145,"v":"fe843d9b3251"},{"id":146,"v":"17e34b577b43"},{"id":147,"v":"87b9e1fcaa51"},{"id":148,"v":"05f7a77b00ef"},{"id":149,"v":"defc5d765f36"},{"id":150,"v":"2bfec3b7ccee"},{"id":151,"v":"aac17493363b"},{"id":152,"v":"1f742446cf18"},{"id":153,"v":"aaf7ca31c7f8"},{"id":154,"v":"61b1c8d3f056"},{"id":155,"v":"92e10608a6aa"},{"id":156,"v":"d9e47605c08e"},{"id":157,"v":"68911d605b1c"},{"id":158,"v":"db30658adee3"},{"id":159,"v":"8647e764cca8"},{"id":160,"v":"9f973c08b320"},{"id":161,"v":"9723f95a7a4b"},{"id":162,"v":"e048f2f26e7d"},{"id":163,"v":"8f07281c07a1"},{"id":164,"v":"921605e9df28"},{"id":165,"v":"bcfa87044052"},{"id":166,"v":"2823a3284659"},{"id":167,"v":"494768747891"},{"id":168,"v":"6c1b572cd28f"},{"id":169,"v":"4740b9bd456c"},{"id":170,"v":"cf3b01455204"},{"id":171,"v":"1001237fbceb"},{"id":172,"v":"aed78647c4c9"},{"id":173,"v":"a6a7db5fb06c"},{"id":174,"v":"10ff71d92728"},{"id":175,"v":"f100e823b9ff"},{"id":176,"v":"4a8481323d0e"},{"id":177,"v":"6085cc20303d"},{"id":178,"v":"4386b19b651a"},{"id":179,"v":"5106653b3ea4"},{"id":180,"v":"e0a3958bb2b6"},{"id":181,"v":"559a04c7fb1d"},{"id":182,"v":"6098514d1fcd"},{"id":183,"v":"66e6122d57c2"},{"id":184,"v":"2244047e9cb5"},{"id":185,"v":"7595f836ed4e"},{"id":186,"v":"b61fdd7f3410"},{"id":187,"v":"07a7aa526fcc"},{"id":188,"v":"ddbdd65b49a6"},{"id":189,"v":"17f362059569"},{"id":190,"v":"116aa8ecbfab"},{"id":191,"v":"a98d89560753"},{"id":192,"v":"3cf3b823d97f"},{"id":193,"v":"2ba3526aec39"},{"id":194,"v":"f563e474a9c2"},{"id":195,"v":"f87f2d6505f1"},{"id":196,"v":"f1584e853785"},{"id":197,"v":"4bcfa34b0dec"},{"id":198,"v":"f2c8b4aaab41"},{"id":199,"v":"2efacb0b1db6"},{"id":200,"v":"a20506a1ec08"},{"id":201,"v":"ba596732b3e6"},{"id":202,"v":"9369daafa229"},{"id":203,"v":"022f3293c3e5"},{"id":204,"v":"521ac280a88e"},{"id":205,"v":"b79f974de99d"},{"id":206,"v":"51be194fee62"},{"id":207,"v":"f0e52950225f"},{"id":208,"v":"040bbbbe667e"},{"id":209,"v":"bb64c540f13b"},{"id":210,"v":"8ffeae69000a"},{"id":211,"v":"b9105b35b09e"},{"id":212,"v":"a576e8bcbba3"},{"id":213,"v":"502ef8ad6d30"},{"id":214,"v":"96b9c5418432"},{"id":215,"v":"b98ed8774deb"},{"id":216,"v":"8b56f4b43c33"},{"id":217,"v":"fbe9804ac77e"},{"id":218,"v":"5cd710afc9e3"},{"id":219,"v":"b8ef63a2f1bb"},{"id":220,"v":"fc4fef9097e6"},{"id":221,"v":"5aabe366b6ec"},{"id":222,"v":"1a06d4cd682b"},{"id":223,"v":"33853d224aa7"},{"id":224,"v":"b5585d4efe1c"},{"id":225,"v":"f1784e6b5b7c"},{"id":226,"v":"6e3526c8ba75"},{"id":227,"v":"69b4d397ab3d"},{"id":228,"v":"cab075f433b9"},{"id":229,"v":"9d50b261424a"},{"id":230,"v":"94fc9e0a1c15"},{"id":231,"v":"2be9f42f7eda"},{"id":232,"v":"4abdc72b1a09"},{"id":233,"v":"f63465e989bd"},{"id":234,"v":"49a6eecace01"},{"id":235,"v":"70c24b931814"},{"id":236,"v":"71a42c5a4436"},{"id":237,"v":"7c952d082313"},{"id":238,"v":"cadc473d8375"},{"id":239,"v":"e54c08c4acff"},{"id":240,"v":"2d95ca625231"},{"id":241,"v":"fb4444f4009a"},{"id":242,"v":"984b4fedc696"},{"id":243,"v":"ae3f0b0e295c"},{"id":244,"v":"a6d04e26a8da"},{"id":245,"v":"a6628951eace"},{"id":246,"v":"2bc84c7fa2f7"},{"id":247,"v":"4eba6b4cdcff"},{"id":248,"v":"10310297a093"},{"id":249,"v":"29a2044ff32e"},{"id":250,"v":"ceab72eb3a99"},{"id":251,"v":"66a8f95cbdb4"},{"id":252,"v":"4c09ca1f942f"},{"id":253,"v":"368a1ded8f79"},{"id":254,"v":"f55b0cde7c3c"},{"id":255,"v":"93e69840ed31"},{"id":256,"v":"975406c3484e"},{"id":257,"v":"9b2cfc122297"},{"id":258,"v":"bb57917a135c"},{"id":259,"v":"50136a23ee2f"},{"id":260,"v":"b99653a6b651"},{"id":261,"v":"4482fccbf5fd"},{"id":262,"v":"0da59201af2a"},{"id":263,"v":"4b1a56a241ff"},{"id":264,"v":"1f9030fe7f64"},{"id":265,"v":"590984ea4d9c"},{"id":266,"v":"98e6556adaa2"},{"id":267,"v":"d4f648e0491d"},{"id":268,"v":"a7ed1cf13cbb"},{"id":269,"v":"8f2f7cf73e1a"},{"id":270,"v":"0f28ecc43c3a"},{"id":271,"v":"1272bf8915fd"},{"id":272,"v":"5be0cc368b00"},{"id":273,"v":"f15ca03f907d"},{"id":274,"v":"5dec1987cf99"},{"id":275,"v":"e7e47d3c841a"},{"id":276,"v":"36d4d7c4f02b"},{"id":277,"v":"e919872cb671"},{"id":278,"v":"9ad7ee139064"},{"id":279,"v":"4271ee086f61"},{"id":280,"v":"e07548316c51"},{"id":281,"v":"1ec8fd9c1817"},{"id":282,"v":"35eaf2e4bda2"},{"id":283,"v":"ba1c42194051"},{"id":284,"v":"58b374ac9bdc"},{"id":285,"v":"ecad9d65563b"},{"id":286,"v":"c3339bae163a"},{"id":287,"v":"981db004c76f"},{"id":288,"v":"b6d58aad2641"},{"id":289,"v":"117f0d5cc5fd"},{"id":290,"v":"df8637b02ec4"},{"id":291,"v":"46f628b50af7"},{"id":292,"v":"50c3286a0bdc"},{"id":293,"v":"b0d68740043d"},{"id":294,"v":"5c6b46eb268f"},{"id":295,"v":"838a8351be6e"},{"id":296,"v":"804e46775169"},{"id":297,"v":"2fb09dfb8b74"},{"id":298,"v":"e5d5725c134d"},{"id":299,"v":"ea69168705f9"}]};</script>
+</head>
+<body>
+<header><nav><ul>
+<li><a href="/docs/section-0">Section 0</a></li>
+<li><a href="/docs/section-1">Section 1</a></li>
+<li><a href="/docs/section-2">Section 2</a></li>
+<li><a href="/docs/section-3">Section 3</a></li>
+<li><a href="/docs/section-4">Section 4</a></li>
+<li><a href="/docs/section-5">Section 5</a></li>
+<li><a href="/docs/section-6">Section 6</a></li>
+<li><a href="/docs/section-7">Section 7</a></li>
+<li><a href="/docs/section-8">Section 8</a></li>
+<li><a href="/docs/section-9">Section 9</a></li>
+<li><a href="/docs/section-10">Section 10</a></li>
+<li><a href="/docs/section-11">Section 11</a></li>
+<li><a href="/docs/section-12">Section 12</a></li>
+<li><a href="/docs/section-13">Section 13</a></li>
+<li><a href="/docs/section-14">Section 14</a></li>
+<li><a href="/docs/section-15">Section 15</a></li>
+<li><a href="/docs/section-16">Section 16</a></li>
+<li><a href="/docs/section-17">Section 17</a></li>
+<li><a href="/docs/section-18">Section 18</a></li>
+<li><a href="/docs/section-19">Section 19</a></li>
+<li><a href="/docs/section-20">Section 20</a></li>
+<li><a href="/docs/section-21">Section 21</a></li>
+<li><a href="/docs/section-22">Section 22</a></li>
+<li><a href="/docs/section-23">Section 23</a></li>
+<li><a href="/docs/section-24">Section 24</a></li>
+<li><a href="/docs/section-25">Section 25</a></li>
+<li><a href="/docs/section-26">Section 26</a></li>
+<li><a href="/docs/section-27">Section 27</a></li>
+<li><a href="/docs/section-28">Section 28</a></li>
+<li><a href="/docs/section-29">Section 29</a></li>
+</ul></nav></header>
+<main>
+<h1>Rate limits &amp; quotas</h1>
+<p>Paragraph 1. The rate limiter allows <strong>100</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 2. The rate limiter allows <strong>110</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 3. The rate limiter allows <strong>120</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 4. The rate limiter allows <strong>130</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 5. The rate limiter allows <strong>140</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 6. The rate limiter allows <strong>150</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 7. The rate limiter allows <strong>160</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 8. The rate limiter allows <strong>170</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 9. The rate limiter allows <strong>180</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 10. The rate limiter allows <strong>190</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 11. The rate limiter allows <strong>200</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<p>Paragraph 12. The rate limiter allows <strong>210</strong> requests per minute per key. Requests above the limit get status 429 and a <code>retry-after</code> header &amp; should back off.</p>
+<h2>Release history</h2>
+<table><thead><tr><th>Version</th><th>Date</th><th>Status</th></tr></thead><tbody>
+<tr><td>v0.0</td><td>2026-01-01</td><td>stable</td></tr>
+<tr><td>v1.0</td><td>2026-02-01</td><td>stable</td></tr>
+<tr><td>v2.0</td><td>2026-03-01</td><td>beta</td></tr>
+<tr><td>v3.0</td><td>2026-04-01</td><td>deprecated</td></tr>
+<tr><td>v4.0</td><td>2026-05-01</td><td>stable</td></tr>
+<tr><td>v5.0</td><td>2026-06-01</td><td>deprecated</td></tr>
+<tr><td>v6.0</td><td>2026-07-01</td><td>deprecated</td></tr>
+<tr><td>v7.0</td><td>2026-08-01</td><td>beta</td></tr>
+<tr><td>v8.0</td><td>2026-09-01</td><td>beta</td></tr>
+<tr><td>v9.0</td><td>2026-10-01</td><td>deprecated</td></tr>
+<tr><td>v10.0</td><td>2026-11-01</td><td>beta</td></tr>
+<tr><td>v11.0</td><td>2026-12-01</td><td>deprecated</td></tr>
+<tr><td>v12.0</td><td>2026-01-01</td><td>beta</td></tr>
+<tr><td>v13.0</td><td>2026-02-01</td><td>deprecated</td></tr>
+<tr><td>v14.0</td><td>2026-03-01</td><td>beta</td></tr>
+<tr><td>v15.0</td><td>2026-04-01</td><td>stable</td></tr>
+<tr><td>v16.0</td><td>2026-05-01</td><td>beta</td></tr>
+<tr><td>v17.0</td><td>2026-06-01</td><td>beta</td></tr>
+<tr><td>v18.0</td><td>2026-07-01</td><td>beta</td></tr>
+<tr><td>v19.0</td><td>2026-08-01</td><td>beta</td></tr>
+<tr><td>v20.0</td><td>2026-09-01</td><td>stable</td></tr>
+<tr><td>v21.0</td><td>2026-10-01</td><td>beta</td></tr>
+<tr><td>v22.0</td><td>2026-11-01</td><td>stable</td></tr>
+<tr><td>v23.0</td><td>2026-12-01</td><td>stable</td></tr>
+<tr><td>v24.0</td><td>2026-01-01</td><td>stable</td></tr>
+</tbody></table>
+<h2>Contact</h2>
+<p>Write to <a href="mailto:support@example.com">support</a> if you need a higher quota.</p>
+</main>
+<footer><nav><ul>
+<li><a href="/docs/section-0">Section 0</a></li>
+<li><a href="/docs/section-1">Section 1</a></li>
+<li><a href="/docs/section-2">Section 2</a></li>
+<li><a href="/docs/section-3">Section 3</a></li>
+<li><a href="/docs/section-4">Section 4</a></li>
+<li><a href="/docs/section-5">Section 5</a></li>
+<li><a href="/docs/section-6">Section 6</a></li>
+<li><a href="/docs/section-7">Section 7</a></li>
+<li><a href="/docs/section-8">Section 8</a></li>
+<li><a href="/docs/section-9">Section 9</a></li>
+<li><a href="/docs/section-10">Section 10</a></li>
+<li><a href="/docs/section-11">Section 11</a></li>
+<li><a href="/docs/section-12">Section 12</a></li>
+<li><a href="/docs/section-13">Section 13</a></li>
+<li><a href="/docs/section-14">Section 14</a></li>
+<li><a href="/docs/section-15">Section 15</a></li>
+<li><a href="/docs/section-16">Section 16</a></li>
+<li><a href="/docs/section-17">Section 17</a></li>
+<li><a href="/docs/section-18">Section 18</a></li>
+<li><a href="/docs/section-19">Section 19</a></li>
+<li><a href="/docs/section-20">Section 20</a></li>
+<li><a href="/docs/section-21">Section 21</a></li>
+<li><a href="/docs/section-22">Section 22</a></li>
+<li><a href="/docs/section-23">Section 23</a></li>
+<li><a href="/docs/section-24">Section 24</a></li>
+<li><a href="/docs/section-25">Section 25</a></li>
+<li><a href="/docs/section-26">Section 26</a></li>
+<li><a href="/docs/section-27">Section 27</a></li>
+<li><a href="/docs/section-28">Section 28</a></li>
+<li><a href="/docs/section-29">Section 29</a></li>
+</ul></nav><p>&copy; 2026 Example</p></footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

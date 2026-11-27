@@ -1,0 +1,67 @@
+2026-11-20T09:00:00.232Z INFO  heartbeat ok seq=0 uptime=0s
+2026-11-20T09:00:00.298Z INFO  http GET /api/cart/3945 200 107ms req=6d316608-3981-4946-a583-85c8147a11b3 ip=10.0.1.47
+2026-11-20T09:00:00.669Z INFO  http GET /api/items/80 200 37ms req=44ee115e-8efd-4053-a808-f388957ea2cc ip=10.0.6.90
+2026-11-20T09:00:00.995Z INFO  http GET /api/search/7267 200 121ms req=d32f88d7-a422-4e22-a455-cfe2cc05598c ip=10.0.0.102
+2026-11-20T09:00:01.355Z INFO  http GET /api/users/1385 200 140ms req=37c37160-9304-4cbc-a9af-3cc9745a794c ip=10.0.1.163
+2026-11-20T09:00:01.717Z INFO  http GET /api/users/41 200 105ms req=0efef5c2-e8c7-428e-add9-65cdeb96d20c ip=10.0.6.177
+2026-11-20T09:00:01.931Z INFO  http GET /api/items/4919 200 131ms req=e14fea7a-7c31-4d21-ab6b-ac6314ae2585 ip=10.0.9.38
+2026-11-20T09:00:02.084Z INFO  http GET /api/items/4412 200 148ms req=95b295af-bbae-4710-acf2-118500ebbee0 ip=10.0.3.63
+2026-11-20T09:00:02.216Z INFO  http GET /api/items/9255 200 146ms req=83f38ff8-e20d-49e0-aca8-79a989f05f18 ip=10.0.7.84
+2026-11-20T09:00:02.251Z INFO  http GET /api/users/6315 200 7ms req=6cb77ee4-0188-4cc5-af6b-677f68f2d077 ip=10.0.2.87
+2026-11-20T09:00:02.528Z INFO  http GET /api/search/1312 200 86ms req=7d5b0336-2781-49ab-a94e-33cff1b40116 ip=10.0.2.6
+2026-11-20T09:00:02.585Z INFO  http GET /healthz 200 168ms req=a5ce6320-8171-494b-a4a0-c023d6adc7c1 ip=10.0.2.183
+2026-11-20T09:00:02.823Z INFO  http GET /api/search/8704 200 25ms req=566baed9-7a50-4a25-aba9-614e8eea598b ip=10.0.6.157
+2026-11-20T09:00:03.064Z INFO  http GET /healthz 200 66ms req=5aa787c9-593d-493d-ac51-328759b33f56 ip=10.0.0.15
+2026-11-20T09:00:03.286Z INFO  http GET /api/search/5420 200 155ms req=2cef7f13-21aa-4528-a64a-6e7645683264 ip=10.0.1.88
+2026-11-20T09:00:03.683Z INFO  http GET /api/users/2968 200 23ms req=6e26b243-20f8-4139-a6f2-745604ab529e ip=10.0.6.233
+2026-11-20T09:00:03.960Z INFO  http GET /healthz 200 156ms req=429b2710-dab9-498a-a3f6-048248fce45a ip=10.0.7.44
+2026-11-20T09:00:04.111Z INFO  http GET /api/cart/9014 200 37ms req=1449f7ec-eb85-4411-ac06-8d110caf7715 ip=10.0.4.186
+2026-11-20T09:00:04.277Z INFO  http GET /healthz 200 45ms req=0a2aa699-bbd2-4390-af86-3aaadee207e2 ip=10.0.8.125
+2026-11-20T09:00:04.519Z INFO  http GET /api/search/5736 200 104ms req=a993c424-e1a4-4694-a16c-a81966ddf225 ip=10.0.5.63
+2026-11-20T09:00:04.562Z INFO  http GET /api/users/1616 200 141ms req=6c6b23bf-f2ba-45d5-a9e5-10e45d2c885f ip=10.0.6.30
+2026-11-20T09:00:04.774Z INFO  http GET /api/search/112 200 96ms req=62a74181-8b38-49e2-ad95-c9b8d202cd03 ip=10.0.3.6
+2026-11-20T09:00:05.055Z INFO  http GET /healthz 200 143ms req=b703c152-03ff-49ef-abb2-427dcc6c75ac ip=10.0.0.162
+2026-11-20T09:00:05.185Z INFO  http GET /api/cart/3531 200 130ms req=9738d3fa-99a0-4cb7-ae3a-a692979c13f9 ip=10.0.2.156
+2026-11-20T09:00:05.526Z INFO  http GET /api/search/2442 200 19ms req=6c05cd39-1177-4767-adab-f4f339be475c ip=10.0.9.230
+2026-11-20T09:00:05.786Z WARN  db-pool pool exhausted, waiting for connection (active=20 idle=0 waiting=14)
+2026-11-20T09:00:05.799Z INFO  http GET /api/users/1282 200 83ms req=46f53d06-23b6-4a46-a9d3-f93b0c319bb8 ip=10.0.4.43
+2026-11-20T09:00:05.907Z INFO  http GET /api/users/7855 200 130ms req=6a77cb3f-78b5-4a23-aceb-3b1408c8fe9e ip=10.0.6.23
+2026-11-20T09:00:05.962Z DEBUG cache miss key=1de35bc5a0380188 ttl=300
+2026-11-20T09:00:06.272Z DEBUG cache miss key=c044cb3cfd4bbfa5 ttl=300
+2026-11-20T09:00:06.397Z INFO  http GET /api/users/912 200 158ms req=f20c2ae5-57f9-49f7-ad89-3386dd441426 ip=10.0.3.65
+2026-11-20T09:00:06.696Z INFO  http GET /api/search/5544 200 135ms req=79bfa9b7-c39e-419d-adae-e8dd2517373e ip=10.0.6.99
+2026-11-20T09:00:07.027Z INFO  http GET /api/cart/3808 200 89ms req=b6817413-37e0-4f6b-aeda-6b4355b0e679 ip=10.0.0.34
+2026-11-20T09:00:07.034Z INFO  heartbeat ok seq=33 uptime=7s
+2026-11-20T09:00:07.392Z INFO  http GET /healthz 200 33ms req=a044d2b0-fe37-4122-a4e2-066a721d6f75 ip=10.0.7.211
+2026-11-20T09:00:07.749Z INFO  http GET /api/cart/7369 200 143ms req=68aec94f-051e-4d1a-a4e8-9650e2b4b077 ip=10.0.5.247
+2026-11-20T09:00:07.895Z ERROR payment-service charge failed order=ord_77031 code=GATEWAY_TIMEOUT upstream=psp-eu-2 after 30000ms
+Error: upstream request timed out
+    at PspClient.charge (/srv/app/src/payments/psp-client.js:88:15)
+    at async ChargeService.run (/srv/app/src/payments/charge-service.js:41:22)
+    at async /srv/app/node_modules/express/lib/router/layer.js:95:5
+    at async next (/srv/app/node_modules/express/lib/router/route.js:149:13)
+    at async Route.dispatch (/srv/app/node_modules/express/lib/router/route.js:119:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2026-11-20T09:00:08.108Z INFO  http GET /healthz 200 52ms req=ab7647a4-058c-4e22-a0eb-a7031ba1c379 ip=10.0.7.201
+2026-11-20T09:00:08.144Z INFO  payment-service retrying charge order=ord_77031 attempt=1
+2026-11-20T09:00:08.149Z INFO  payment-service retrying charge order=ord_77031 attempt=2
+2026-11-20T09:00:08.178Z INFO  payment-service retrying charge order=ord_77031 attempt=3
+2026-11-20T09:00:08.351Z INFO  payment-service retrying charge order=ord_77031 attempt=4
+2026-11-20T09:00:08.557Z INFO  payment-service retrying charge order=ord_77031 attempt=5
+2026-11-20T09:00:08.841Z INFO  payment-service retrying charge order=ord_77031 attempt=6
+2026-11-20T09:00:09.151Z INFO  payment-service retrying charge order=ord_77031 attempt=7
+2026-11-20T09:00:09.262Z INFO  payment-service retrying charge order=ord_77031 attempt=8
+2026-11-20T09:00:09.408Z INFO  payment-service retrying charge order=ord_77031 attempt=9
+2026-11-20T09:00:09.550Z INFO  payment-service retrying charge order=ord_77031 attempt=10
+2026-11-20T09:00:09.825Z INFO  payment-service retrying charge order=ord_77031 attempt=11
+2026-11-20T09:00:10.155Z INFO  payment-service retrying charge order=ord_77031 attempt=12
+2026-11-20T09:00:10.502Z INFO  payment-service retrying charge order=ord_77031 attempt=13
+2026-11-20T09:00:10.861Z INFO  payment-service retrying charge order=ord_77031 attempt=14
+2026-11-20T09:00:11.096Z INFO  payment-service retrying charge order=ord_77031 attempt=15
+2026-11-20T09:00:11.360Z INFO  payment-service retrying charge order=ord_77031 attempt=16
+2026-11-20T09:00:11.615Z INFO  payment-service retrying charge order=ord_77031 attempt=17
+2026-11-20T09:00:11.860Z INFO  payment-service retrying charge order=ord_77031 attempt=18
+2026-11-20T09:00:11.922Z INFO  payment-service retrying charge order=ord_77031 attempt=19
+2026-11-20T09:00:12.322Z INFO  payment-service retrying charge order=ord_77031 attempt=20
+2026-11-20T09:00:12.704Z INFO  payment-service retrying charge order=ord_77031 attempt=21
+2026-11-20T09:00:12.990Z INFO  payment-service retrying charge order=ord_77031 attempt=22

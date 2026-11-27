@@ -1,0 +1,2 @@
+{"id":"log-failed-order","context_file":"eval/small.log","question":"Which order id failed, and with which error code?","expected":["ord_77031","GATEWAY_TIMEOUT"]}
+{"id":"json-user-count","context_file":"eval/small.json","question":"How many users are in the list? Answer with the number.","expected":["25"]}

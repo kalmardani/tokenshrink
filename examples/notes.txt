@@ -1,0 +1,192 @@
+The migration moves the billing tables to the new cluster in three steps. Note 1.
+First the replica is created and kept in sync for at least one full day. Note 2.
+Then writes are paused for about five minutes while the last changes are copied. Note 3.
+Finally the application switches its connection string and writes resume. Note 4.
+Rollback is possible until the old primary is decommissioned one week later. Note 5.
+
+The migration moves the billing tables to the new cluster in three steps. Note 6.
+First the replica is created and kept in sync for at least one full day. Note 7.
+Then writes are paused for about five minutes while the last changes are copied. Note 8.
+Finally the application switches its connection string and writes resume. Note 9.
+Rollback is possible until the old primary is decommissioned one week later. Note 10.
+
+The migration moves the billing tables to the new cluster in three steps. Note 11.
+First the replica is created and kept in sync for at least one full day. Note 12.
+Then writes are paused for about five minutes while the last changes are copied. Note 13.
+Finally the application switches its connection string and writes resume. Note 14.
+Rollback is possible until the old primary is decommissioned one week later. Note 15.
+
+The migration moves the billing tables to the new cluster in three steps. Note 16.
+First the replica is created and kept in sync for at least one full day. Note 17.
+Then writes are paused for about five minutes while the last changes are copied. Note 18.
+Finally the application switches its connection string and writes resume. Note 19.
+Rollback is possible until the old primary is decommissioned one week later. Note 20.
+
+The migration moves the billing tables to the new cluster in three steps. Note 21.
+First the replica is created and kept in sync for at least one full day. Note 22.
+Then writes are paused for about five minutes while the last changes are copied. Note 23.
+Finally the application switches its connection string and writes resume. Note 24.
+Rollback is possible until the old primary is decommissioned one week later. Note 25.
+
+The migration moves the billing tables to the new cluster in three steps. Note 26.
+First the replica is created and kept in sync for at least one full day. Note 27.
+Then writes are paused for about five minutes while the last changes are copied. Note 28.
+Finally the application switches its connection string and writes resume. Note 29.
+Rollback is possible until the old primary is decommissioned one week later. Note 30.
+
+The migration moves the billing tables to the new cluster in three steps. Note 31.
+First the replica is created and kept in sync for at least one full day. Note 32.
+Then writes are paused for about five minutes while the last changes are copied. Note 33.
+Finally the application switches its connection string and writes resume. Note 34.
+Rollback is possible until the old primary is decommissioned one week later. Note 35.
+
+The migration moves the billing tables to the new cluster in three steps. Note 36.
+First the replica is created and kept in sync for at least one full day. Note 37.
+Then writes are paused for about five minutes while the last changes are copied. Note 38.
+Finally the application switches its connection string and writes resume. Note 39.
+Rollback is possible until the old primary is decommissioned one week later. Note 40.
+
+The migration moves the billing tables to the new cluster in three steps. Note 41.
+First the replica is created and kept in sync for at least one full day. Note 42.
+Then writes are paused for about five minutes while the last changes are copied. Note 43.
+Finally the application switches its connection string and writes resume. Note 44.
+Rollback is possible until the old primary is decommissioned one week later. Note 45.
+
+The migration moves the billing tables to the new cluster in three steps. Note 46.
+First the replica is created and kept in sync for at least one full day. Note 47.
+Then writes are paused for about five minutes while the last changes are copied. Note 48.
+Finally the application switches its connection string and writes resume. Note 49.
+Rollback is possible until the old primary is decommissioned one week later. Note 50.
+
+The migration moves the billing tables to the new cluster in three steps. Note 51.
+First the replica is created and kept in sync for at least one full day. Note 52.
+Then writes are paused for about five minutes while the last changes are copied. Note 53.
+Finally the application switches its connection string and writes resume. Note 54.
+Rollback is possible until the old primary is decommissioned one week later. Note 55.
+
+The migration moves the billing tables to the new cluster in three steps. Note 56.
+First the replica is created and kept in sync for at least one full day. Note 57.
+Then writes are paused for about five minutes while the last changes are copied. Note 58.
+Finally the application switches its connection string and writes resume. Note 59.
+Rollback is possible until the old primary is decommissioned one week later. Note 60.
+
+The migration moves the billing tables to the new cluster in three steps. Note 61.
+First the replica is created and kept in sync for at least one full day. Note 62.
+Then writes are paused for about five minutes while the last changes are copied. Note 63.
+Finally the application switches its connection string and writes resume. Note 64.
+Rollback is possible until the old primary is decommissioned one week later. Note 65.
+
+The migration moves the billing tables to the new cluster in three steps. Note 66.
+First the replica is created and kept in sync for at least one full day. Note 67.
+Then writes are paused for about five minutes while the last changes are copied. Note 68.
+Finally the application switches its connection string and writes resume. Note 69.
+Rollback is possible until the old primary is decommissioned one week later. Note 70.
+
+The migration moves the billing tables to the new cluster in three steps. Note 71.
+First the replica is created and kept in sync for at least one full day. Note 72.
+Then writes are paused for about five minutes while the last changes are copied. Note 73.
+Finally the application switches its connection string and writes resume. Note 74.
+Rollback is possible until the old primary is decommissioned one week later. Note 75.
+
+The migration moves the billing tables to the new cluster in three steps. Note 76.
+First the replica is created and kept in sync for at least one full day. Note 77.
+Then writes are paused for about five minutes while the last changes are copied. Note 78.
+Finally the application switches its connection string and writes resume. Note 79.
+Rollback is possible until the old primary is decommissioned one week later. Note 80.
+
+The migration moves the billing tables to the new cluster in three steps. Note 81.
+First the replica is created and kept in sync for at least one full day. Note 82.
+Then writes are paused for about five minutes while the last changes are copied. Note 83.
+Finally the application switches its connection string and writes resume. Note 84.
+Rollback is possible until the old primary is decommissioned one week later. Note 85.
+
+The migration moves the billing tables to the new cluster in three steps. Note 86.
+First the replica is created and kept in sync for at least one full day. Note 87.
+Then writes are paused for about five minutes while the last changes are copied. Note 88.
+Finally the application switches its connection string and writes resume. Note 89.
+Rollback is possible until the old primary is decommissioned one week later. Note 90.
+
+The migration moves the billing tables to the new cluster in three steps. Note 91.
+First the replica is created and kept in sync for at least one full day. Note 92.
+Then writes are paused for about five minutes while the last changes are copied. Note 93.
+Finally the application switches its connection string and writes resume. Note 94.
+Rollback is possible until the old primary is decommissioned one week later. Note 95.
+
+The migration moves the billing tables to the new cluster in three steps. Note 96.
+First the replica is created and kept in sync for at least one full day. Note 97.
+Then writes are paused for about five minutes while the last changes are copied. Note 98.
+Finally the application switches its connection string and writes resume. Note 99.
+Rollback is possible until the old primary is decommissioned one week later. Note 100.
+
+The migration moves the billing tables to the new cluster in three steps. Note 101.
+First the replica is created and kept in sync for at least one full day. Note 102.
+Then writes are paused for about five minutes while the last changes are copied. Note 103.
+Finally the application switches its connection string and writes resume. Note 104.
+Rollback is possible until the old primary is decommissioned one week later. Note 105.
+
+The migration moves the billing tables to the new cluster in three steps. Note 106.
+First the replica is created and kept in sync for at least one full day. Note 107.
+Then writes are paused for about five minutes while the last changes are copied. Note 108.
+Finally the application switches its connection string and writes resume. Note 109.
+Rollback is possible until the old primary is decommissioned one week later. Note 110.
+
+The migration moves the billing tables to the new cluster in three steps. Note 111.
+First the replica is created and kept in sync for at least one full day. Note 112.
+Then writes are paused for about five minutes while the last changes are copied. Note 113.
+Finally the application switches its connection string and writes resume. Note 114.
+Rollback is possible until the old primary is decommissioned one week later. Note 115.
+
+The migration moves the billing tables to the new cluster in three steps. Note 116.
+First the replica is created and kept in sync for at least one full day. Note 117.
+Then writes are paused for about five minutes while the last changes are copied. Note 118.
+Finally the application switches its connection string and writes resume. Note 119.
+Rollback is possible until the old primary is decommissioned one week later. Note 120.
+
+The migration moves the billing tables to the new cluster in three steps. Note 121.
+First the replica is created and kept in sync for at least one full day. Note 122.
+Then writes are paused for about five minutes while the last changes are copied. Note 123.
+Finally the application switches its connection string and writes resume. Note 124.
+Rollback is possible until the old primary is decommissioned one week later. Note 125.
+
+The migration moves the billing tables to the new cluster in three steps. Note 126.
+First the replica is created and kept in sync for at least one full day. Note 127.
+Then writes are paused for about five minutes while the last changes are copied. Note 128.
+Finally the application switches its connection string and writes resume. Note 129.
+Rollback is possible until the old primary is decommissioned one week later. Note 130.
+
+The migration moves the billing tables to the new cluster in three steps. Note 131.
+First the replica is created and kept in sync for at least one full day. Note 132.
+Then writes are paused for about five minutes while the last changes are copied. Note 133.
+Finally the application switches its connection string and writes resume. Note 134.
+Rollback is possible until the old primary is decommissioned one week later. Note 135.
+
+The migration moves the billing tables to the new cluster in three steps. Note 136.
+First the replica is created and kept in sync for at least one full day. Note 137.
+Then writes are paused for about five minutes while the last changes are copied. Note 138.
+Finally the application switches its connection string and writes resume. Note 139.
+Rollback is possible until the old primary is decommissioned one week later. Note 140.
+
+The migration moves the billing tables to the new cluster in three steps. Note 141.
+First the replica is created and kept in sync for at least one full day. Note 142.
+Then writes are paused for about five minutes while the last changes are copied. Note 143.
+Finally the application switches its connection string and writes resume. Note 144.
+Rollback is possible until the old primary is decommissioned one week later. Note 145.
+
+The migration moves the billing tables to the new cluster in three steps. Note 146.
+First the replica is created and kept in sync for at least one full day. Note 147.
+Then writes are paused for about five minutes while the last changes are copied. Note 148.
+Finally the application switches its connection string and writes resume. Note 149.
+Rollback is possible until the old primary is decommissioned one week later. Note 150.
+
+The migration moves the billing tables to the new cluster in three steps. Note 151.
+First the replica is created and kept in sync for at least one full day. Note 152.
+Then writes are paused for about five minutes while the last changes are copied. Note 153.
+Finally the application switches its connection string and writes resume. Note 154.
+Rollback is possible until the old primary is decommissioned one week later. Note 155.
+
+The migration moves the billing tables to the new cluster in three steps. Note 156.
+First the replica is created and kept in sync for at least one full day. Note 157.
+Then writes are paused for about five minutes while the last changes are copied. Note 158.
+Finally the application switches its connection string and writes resume. Note 159.
+Rollback is possible until the old primary is decommissioned one week later. Note 160.
+

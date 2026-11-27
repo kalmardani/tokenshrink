@@ -1,0 +1,421 @@
+{
+  "page": 1,
+  "per_page": 25,
+  "total": 25,
+  "generated_at": "2026-11-20T09:00:00Z",
+  "users": [
+    {
+      "id": 1,
+      "email": "gergo.kiss1@example.com",
+      "name": "Gergo Kiss",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-04-28T15:35:00Z",
+      "score": 21.1,
+      "tags": [
+        "trial",
+        "trial"
+      ],
+      "address": {
+        "city": "Pecs",
+        "zip": "6931"
+      }
+    },
+    {
+      "id": 2,
+      "email": "bela.varga2@example.com",
+      "name": "Bela Varga",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-06-07T14:18:00Z",
+      "score": 93.96,
+      "tags": [],
+      "address": {
+        "city": "Szeged",
+        "zip": "2775"
+      }
+    },
+    {
+      "id": 3,
+      "email": "julia.kiss3@example.com",
+      "name": "Julia Kiss",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-05-18T11:10:00Z",
+      "score": 52.74,
+      "tags": [
+        "churn-risk",
+        "beta"
+      ],
+      "address": {
+        "city": "Debrecen",
+        "zip": "5026"
+      }
+    },
+    {
+      "id": 4,
+      "email": "laszlo.horvath4@example.com",
+      "name": "Laszlo Horvath",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-07-20T07:43:00Z",
+      "score": 73.49,
+      "tags": [
+        "vip",
+        "beta"
+      ],
+      "address": {
+        "city": "Budapest",
+        "zip": "7174"
+      }
+    },
+    {
+      "id": 5,
+      "email": "julia.nemeth5@example.com",
+      "name": "Julia Nemeth",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-12-07T15:50:00Z",
+      "score": 65.9,
+      "tags": [
+        "trial",
+        "beta"
+      ],
+      "address": {
+        "city": "Szeged",
+        "zip": "8670"
+      }
+    },
+    {
+      "id": 6,
+      "email": "kata.kiss6@example.com",
+      "name": "Kata Kiss",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-12-12T00:23:00Z",
+      "score": 10.09,
+      "tags": [
+        "vip",
+        "vip",
+        "beta"
+      ],
+      "address": {
+        "city": "Debrecen",
+        "zip": "2021"
+      }
+    },
+    {
+      "id": 7,
+      "email": "ivan.kovacs7@example.com",
+      "name": "Ivan Kovacs",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-12-28T03:39:00Z",
+      "score": 64.23,
+      "tags": [
+        "vip",
+        "partner"
+      ],
+      "address": {
+        "city": "Gyor",
+        "zip": "8933"
+      }
+    },
+    {
+      "id": 8,
+      "email": "bela.farkas8@example.com",
+      "name": "Bela Farkas",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-10-11T23:48:00Z",
+      "score": 45.4,
+      "tags": [
+        "trial",
+        "partner"
+      ],
+      "address": {
+        "city": "Szeged",
+        "zip": "8155"
+      }
+    },
+    {
+      "id": 9,
+      "email": "hanna.farkas9@example.com",
+      "name": "Hanna Farkas",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-04-17T21:24:00Z",
+      "score": 17.42,
+      "tags": [
+        "partner",
+        "partner",
+        "trial"
+      ],
+      "address": {
+        "city": "Gyor",
+        "zip": "8127"
+      }
+    },
+    {
+      "id": 10,
+      "email": "hanna.varga10@example.com",
+      "name": "Hanna Varga",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-12-10T22:07:00Z",
+      "score": 5.41,
+      "tags": [],
+      "address": {
+        "city": "Budapest",
+        "zip": "8291"
+      }
+    },
+    {
+      "id": 11,
+      "email": "laszlo.farkas11@example.com",
+      "name": "Laszlo Farkas",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-06-17T00:00:00Z",
+      "score": 85.68,
+      "tags": [
+        "vip",
+        "churn-risk",
+        "vip"
+      ],
+      "address": {
+        "city": "Gyor",
+        "zip": "1571"
+      }
+    },
+    {
+      "id": 12,
+      "email": "dora.szabo12@example.com",
+      "name": "Dora Szabo",
+      "role": "editor",
+      "active": true,
+      "created_at": "2025-11-25T02:11:00Z",
+      "score": 25.03,
+      "tags": [],
+      "address": {
+        "city": "Gyor",
+        "zip": "7746"
+      }
+    },
+    {
+      "id": 13,
+      "email": "fanni.molnar13@example.com",
+      "name": "Fanni Molnar",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-10-11T19:32:00Z",
+      "score": 26.6,
+      "tags": [
+        "churn-risk",
+        "trial",
+        "trial"
+      ],
+      "address": {
+        "city": "Pecs",
+        "zip": "2688"
+      }
+    },
+    {
+      "id": 14,
+      "email": "dora.farkas14@example.com",
+      "name": "Dora Farkas",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-02-28T17:27:00Z",
+      "score": 98.17,
+      "tags": [
+        "trial"
+      ],
+      "address": {
+        "city": "Szeged",
+        "zip": "6953"
+      }
+    },
+    {
+      "id": 15,
+      "email": "dora.farkas15@example.com",
+      "name": "Dora Farkas",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-01-22T07:58:00Z",
+      "score": 22.67,
+      "tags": [
+        "beta",
+        "partner"
+      ],
+      "address": {
+        "city": "Debrecen",
+        "zip": "1004"
+      }
+    },
+    {
+      "id": 16,
+      "email": "ivan.kovacs16@example.com",
+      "name": "Ivan Kovacs",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-02-08T18:21:00Z",
+      "score": 31.75,
+      "tags": [
+        "partner",
+        "trial"
+      ],
+      "address": {
+        "city": "Pecs",
+        "zip": "2993"
+      }
+    },
+    {
+      "id": 17,
+      "email": "laszlo.molnar17@example.com",
+      "name": "Laszlo Molnar",
+      "role": "editor",
+      "active": true,
+      "created_at": "2025-09-15T04:04:00Z",
+      "score": 0.43,
+      "tags": [
+        "trial",
+        "vip"
+      ],
+      "address": {
+        "city": "Szeged",
+        "zip": "1907"
+      }
+    },
+    {
+      "id": 18,
+      "email": "ivan.molnar18@example.com",
+      "name": "Ivan Molnar",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-06-04T02:02:00Z",
+      "score": 17.23,
+      "tags": [
+        "beta"
+      ],
+      "address": {
+        "city": "Budapest",
+        "zip": "8368"
+      }
+    },
+    {
+      "id": 19,
+      "email": "fanni.horvath19@example.com",
+      "name": "Fanni Horvath",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-10-24T09:11:00Z",
+      "score": 7.4,
+      "tags": [],
+      "address": {
+        "city": "Gyor",
+        "zip": "3068"
+      }
+    },
+    {
+      "id": 20,
+      "email": "fanni.farkas20@example.com",
+      "name": "Fanni Farkas",
+      "role": "editor",
+      "active": false,
+      "created_at": "2025-02-11T21:58:00Z",
+      "score": 73.27,
+      "tags": [
+        "churn-risk",
+        "churn-risk",
+        "beta"
+      ],
+      "address": {
+        "city": "Pecs",
+        "zip": "1724"
+      }
+    },
+    {
+      "id": 21,
+      "email": "csilla.horvath21@example.com",
+      "name": "Csilla Horvath",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-12-16T20:29:00Z",
+      "score": 80.81,
+      "tags": [
+        "churn-risk"
+      ],
+      "address": {
+        "city": "Gyor",
+        "zip": "3522"
+      }
+    },
+    {
+      "id": 22,
+      "email": "hanna.varga22@example.com",
+      "name": "Hanna Varga",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-12-17T13:38:00Z",
+      "score": 68.81,
+      "tags": [
+        "churn-risk",
+        "trial",
+        "partner"
+      ],
+      "address": {
+        "city": "Debrecen",
+        "zip": "3964"
+      }
+    },
+    {
+      "id": 23,
+      "email": "julia.nemeth23@example.com",
+      "name": "Julia Nemeth",
+      "role": "editor",
+      "active": true,
+      "created_at": "2025-02-07T16:15:00Z",
+      "score": 41.24,
+      "tags": [
+        "churn-risk",
+        "partner",
+        "churn-risk"
+      ],
+      "address": {
+        "city": "Szeged",
+        "zip": "6286"
+      }
+    },
+    {
+      "id": 24,
+      "email": "julia.nagy24@example.com",
+      "name": "Julia Nagy",
+      "role": "viewer",
+      "active": false,
+      "created_at": "2025-03-19T21:53:00Z",
+      "score": 77.62,
+      "tags": [],
+      "address": {
+        "city": "Gyor",
+        "zip": "3000"
+      }
+    },
+    {
+      "id": 25,
+      "email": "hanna.szabo25@example.com",
+      "name": "Hanna Szabo",
+      "role": "viewer",
+      "active": true,
+      "created_at": "2025-09-01T04:47:00Z",
+      "score": 84.87,
+      "tags": [
+        "beta"
+      ],
+      "address": {
+        "city": "Debrecen",
+        "zip": "7036"
+      }
+    }
+  ]
+}
