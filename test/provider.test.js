@@ -7,12 +7,15 @@ import { join } from 'node:path';
 import { requestJson, redact, backoff } from '../src/provider/http.js';
 import { createProvider, resolveCredentials } from '../src/provider/index.js';
 import { claudeArgs, parseClaudeOutput } from '../src/provider/claude-cli.js';
+import { quoteForCmd, resolveCommand, findWindowsExecutable, runProcess } from '../src/provider/subprocess.js';
 import { codexArgs, parseCodexEvents } from '../src/provider/codex-cli.js';
 import { resolveConfig, ConfigError } from '../src/config.js';
 import { subscriptionLogin, subscriptionStatus } from '../src/auth/subscription.js';
-import { tempDir } from './helpers.js';
+import { tempDir, SPAWN_TIMEOUT, ROOT } from './helpers.js';
 
 const KEY = 'sk-live-abcdefghijklmnop';
+const FAKE_CLAUDE = 'tokenshrink-test-fake-claude';
+const FAKE_CODEX = 'tokenshrink-test-fake-codex';
 
 function fakeFetch(responses) {
   const calls = [];
@@ -34,8 +37,9 @@ const cfg = (over = {}) => ({
   timeoutMs: 5000,
   temperature: null,
   env: { OPENAI_API_KEY: KEY, ANTHROPIC_API_KEY: KEY },
-  claudeBin: 'claude',
-  codexBin: 'codex',
+  // Names that exist on no PATH, so a real CLI is never picked up on any OS.
+  claudeBin: FAKE_CLAUDE,
+  codexBin: FAKE_CODEX,
   ...over,
 });
 
@@ -57,7 +61,7 @@ test('requestJson stops after the retry limit and does not retry 400', async () 
   assert.ok(backoff(10, null, () => 0) <= 20000);
 });
 
-test('requestJson times out', async () => {
+test('requestJson times out', { timeout: SPAWN_TIMEOUT }, async () => {
   const slow = (url, init) => new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(init.signal.reason)));
   await assert.rejects(requestJson('http://x', {}, { fetch: slow, timeoutMs: 20, retries: 0 }), /timed out after 20 ms/);
 });
@@ -104,7 +108,8 @@ test('oauth credentials come from the token cache', async () => {
 });
 
 test('claude CLI arguments lock the model down', () => {
-  const args = claudeArgs({ system: 'sys', model: 'claude-x' });
+  const args = claudeArgs({ systemFile: '/tmp/x/system-prompt.txt', model: 'claude-x' });
+  assert.equal(args[args.indexOf('--system-prompt-file') + 1], '/tmp/x/system-prompt.txt');
   assert.deepEqual(args.slice(0, 3), ['-p', '--output-format', 'json']);
   assert.ok(args.includes('--strict-mcp-config'));
   assert.equal(args[args.indexOf('--permission-mode') + 1], 'dontAsk');
@@ -178,18 +183,21 @@ function fakeSpawn(script) {
   return fn;
 }
 
-test('claude-cli adapter runs the CLI with stdin prompt in a temp dir', async () => {
+test('claude-cli adapter runs the CLI with stdin prompt in a temp dir', { timeout: SPAWN_TIMEOUT }, async () => {
   const spawn = fakeSpawn(() => ({ stdout: JSON.stringify({ type: 'result', result: 'pong', usage: { input_tokens: 3, output_tokens: 1 }, total_cost_usd: 0 }) }));
   const p = createProvider(cfg({ provider: 'claude-cli', model: null, auth: { type: 'subscription', oauth: {} } }), { spawn });
   const r = await p.complete({ system: 'sys', messages: [{ role: 'user', content: 'ping' }] });
   assert.equal(r.text, 'pong');
   const call = spawn.calls[0];
-  assert.equal(call.bin, 'claude');
+  assert.equal(call.bin, FAKE_CLAUDE);
   assert.equal(call.opts.shell, false);
   assert.notEqual(call.opts.cwd, process.cwd());
+  const sysIndex = call.args.indexOf('--system-prompt-file');
+  assert.ok(sysIndex > 0, 'system prompt goes through a file');
+  assert.ok(!call.args.includes('sys'), 'system prompt text is never an argument');
 });
 
-test('codex-cli adapter reads the last message file', async () => {
+test('codex-cli adapter reads the last message file', { timeout: SPAWN_TIMEOUT }, async () => {
   const spawn = fakeSpawn((bin, args) => ({
     stdout: '{"type":"turn.completed","usage":{"input_tokens":9,"output_tokens":2}}\n',
     file: { path: (a) => a[a.indexOf('-o') + 1], text: 'final answer' },
@@ -200,10 +208,10 @@ test('codex-cli adapter reads the last message file', async () => {
   assert.equal(r.usage.inputTokens, 9);
 });
 
-test('subscription login checks install, probes, then starts the official sign in', async () => {
+test('subscription login checks install, probes, then starts the official sign in', { timeout: SPAWN_TIMEOUT }, async () => {
   const printed = [];
   const missing = fakeSpawn(() => ({ enoent: true }));
-  let r = await subscriptionLogin('claude', 'claude', { spawn: missing, print: (l) => printed.push(l) });
+  let r = await subscriptionLogin('claude', FAKE_CLAUDE, { spawn: missing, print: (l) => printed.push(l) });
   assert.equal(r.installed, false);
   assert.match(printed.join('\n'), /Install the official claude CLI/);
 
@@ -217,11 +225,11 @@ test('subscription login checks install, probes, then starts the official sign i
     if (args[0] === '-p') return signedIn ? { stdout: JSON.stringify({ type: 'result', result: 'ok' }) } : { code: 1, stderr: 'Not logged in' };
     return { code: 1 };
   });
-  r = await subscriptionLogin('claude', 'claude', { spawn: claude, print: () => {} });
+  r = await subscriptionLogin('claude', FAKE_CLAUDE, { spawn: claude, print: () => {} });
   assert.equal(r.signedIn, true);
   const login = claude.calls.find((c) => c.args[0] === 'auth');
   assert.equal(login.opts.stdio, 'inherit');
-  r = await subscriptionLogin('claude', 'claude', { spawn: claude, print: () => {} });
+  r = await subscriptionLogin('claude', FAKE_CLAUDE, { spawn: claude, print: () => {} });
   assert.equal(r.already, true);
 
   const codex = fakeSpawn((bin, args) => {
@@ -229,7 +237,7 @@ test('subscription login checks install, probes, then starts the official sign i
     if (args[0] === 'login' && args[1] === 'status') return { stdout: 'Logged in using ChatGPT\n' };
     return { code: 1 };
   });
-  const s = await subscriptionStatus('chatgpt', 'codex', { spawn: codex });
+  const s = await subscriptionStatus('chatgpt', FAKE_CODEX, { spawn: codex });
   assert.deepEqual({ installed: s.installed, signedIn: s.signedIn }, { installed: true, signedIn: true });
 });
 
@@ -247,4 +255,34 @@ test('config resolution rejects secrets in the file and bad combinations', (t) =
   assert.throws(() => resolveConfig({ provider: 'nope' }, none), /unknown provider/);
   assert.equal(resolveConfig({}, { TOKENSHRINK_CONFIG_DIR: dir, TOKENSHRINK_CONFIG: join(dir, 'missing.json') }).provider, 'claude-cli');
   assert.equal(resolveConfig({ provider: 'openai' }, { TOKENSHRINK_API_KEY_ENV: 'GATEWAY_KEY', TOKENSHRINK_CONFIG: join(dir, 'missing.json') }).auth.keyEnv, 'GATEWAY_KEY');
+});
+
+test('Windows resolution finds .cmd shims with PATHEXT and quotes for cmd.exe', () => {
+  const env = { PATH: 'C:\\Windows;C:\\Users\\A B\\AppData\\Roaming\\npm', PATHEXT: '.COM;.EXE;.BAT;.CMD', ComSpec: 'C:\\Windows\\system32\\cmd.exe' };
+  const files = new Set(['C:\\Users\\A B\\AppData\\Roaming\\npm\\claude.cmd', 'C:\\Tools\\codex.exe']);
+  const exists = (p) => files.has(p);
+  assert.equal(findWindowsExecutable('claude', env, exists), 'C:\\Users\\A B\\AppData\\Roaming\\npm\\claude.cmd');
+  assert.equal(findWindowsExecutable('nothing', env, exists), null);
+  const r = resolveCommand('claude', ['-p', '--tools', '', '--system-prompt-file', 'C:\\Temp\\ts (1)\\s.txt'], { platform: 'win32', env, exists });
+  assert.equal(r.command, 'C:\\Windows\\system32\\cmd.exe');
+  assert.deepEqual(r.args.slice(0, 3), ['/d', '/s', '/c']);
+  assert.equal(r.options.windowsVerbatimArguments, true);
+  assert.equal(
+    r.args[3],
+    '"^"C:\\Users\\A^ B\\AppData\\Roaming\\npm\\claude.cmd^" ^"-p^" ^"--tools^" ^"^" ^"--system-prompt-file^" ^"C:\\Temp\\ts^ ^(1^)\\s.txt^""',
+  );
+  const exe = resolveCommand('C:\\Tools\\codex', ['exec'], { platform: 'win32', env, exists });
+  assert.deepEqual(exe, { command: 'C:\\Tools\\codex.exe', args: ['exec'], options: {} });
+  assert.deepEqual(resolveCommand('claude', ['-p'], { platform: 'linux', env: {} }), { command: 'claude', args: ['-p'], options: {} });
+  assert.equal(quoteForCmd('a&b|c'), '^"a^&b^|c^"');
+  assert.equal(quoteForCmd('dir\\'), '^"dir\\\\^"');
+  for (const bad of ['%PATH%', 'say "hi"', 'two\nlines']) assert.throws(() => quoteForCmd(bad), /cannot be passed safely/);
+});
+
+test('runProcess runs a real child, feeds stdin and kills it on timeout', { timeout: SPAWN_TIMEOUT }, async () => {
+  const echo = await runProcess(process.execPath, ['-e', 'process.stdin.pipe(process.stdout)'], { input: 'hello', timeoutMs: 30000 });
+  assert.equal(echo.code, 0);
+  assert.equal(echo.stdout, 'hello');
+  await assert.rejects(runProcess(process.execPath, ['-e', 'setTimeout(() => {}, 60000)'], { timeoutMs: 300 }), { code: 'TIMEOUT' });
+  await assert.rejects(runProcess(join(ROOT, 'no-such-binary-here'), [], { timeoutMs: 5000 }), { code: 'ENOENT' });
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { openStore, hashText, compress, expand } from '../src/index.js';
-import { example, tempDir } from './helpers.js';
+import { example, tempDir, SPAWN_TIMEOUT } from './helpers.js';
 
 test('put and get round trip, dedupe by content, file mode 0600', (t) => {
   const dir = tempDir(t);

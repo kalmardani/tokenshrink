@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
-import { ROOT, tempDir, example } from './helpers.js';
+import { ROOT, tempDir, example, SPAWN_TIMEOUT } from './helpers.js';
 
 const BIN = join(ROOT, 'bin', 'tokenshrink.js');
 
@@ -10,6 +10,7 @@ function run(t, args, { input, env = {} } = {}) {
   const dir = t.dataDir ?? (t.dataDir = tempDir(t));
   const r = spawnSync(process.execPath, [BIN, ...args], {
     input,
+    timeout: 30000,
     encoding: 'utf8',
     env: {
       ...process.env,
@@ -25,7 +26,7 @@ function run(t, args, { input, env = {} } = {}) {
   return r;
 }
 
-test('compress a file, then expand its handle exactly', (t) => {
+test('compress a file, then expand its handle exactly', { timeout: SPAWN_TIMEOUT }, (t) => {
   const r = run(t, ['compress', join(ROOT, 'examples', 'app.log'), '--json']);
   assert.equal(r.status, 0, r.stderr);
   const rep = JSON.parse(r.stdout);
@@ -40,7 +41,7 @@ test('compress a file, then expand its handle exactly', (t) => {
   assert.ok(span.stdout.length > 0);
 });
 
-test('compress reads stdin, reports stats, and the budget exit code is 3', (t) => {
+test('compress reads stdin, reports stats, and the budget exit code is 3', { timeout: SPAWN_TIMEOUT }, (t) => {
   const r = run(t, ['compress', '-', '--verbose'], { input: example('users.json') });
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /^\[tokenshrink ts:/);
@@ -52,7 +53,7 @@ test('compress reads stdin, reports stats, and the budget exit code is 3', (t) =
   assert.match(b.stderr, /cannot fit into 3 tokens/);
 });
 
-test('usage errors exit with 2 and unknown handles with 1', (t) => {
+test('usage errors exit with 2 and unknown handles with 1', { timeout: SPAWN_TIMEOUT }, (t) => {
   assert.equal(run(t, ['frobnicate']).status, 2);
   assert.equal(run(t, ['compress', '--level', '9', join(ROOT, 'examples', 'app.log')]).status, 2);
   assert.equal(run(t, ['compress', '--nope']).status, 2);
@@ -62,7 +63,7 @@ test('usage errors exit with 2 and unknown handles with 1', (t) => {
   assert.match(run(t, ['--help']).stdout, /tokenshrink compress/);
 });
 
-test('detect, forget and prune', (t) => {
+test('detect, forget and prune', { timeout: SPAWN_TIMEOUT }, (t) => {
   assert.match(run(t, ['detect', join(ROOT, 'examples', 'change.diff')]).stdout, /^diff\t/);
   const r = JSON.parse(run(t, ['compress', join(ROOT, 'examples', 'orders.csv'), '--json']).stdout);
   assert.match(run(t, ['forget', r.handle]).stdout, /deleted 1/);
@@ -71,7 +72,7 @@ test('detect, forget and prune', (t) => {
   assert.match(run(t, ['prune', '--days', '30']).stdout, /deleted 0/);
 });
 
-test('eval runs with the fake provider from the command line', (t) => {
+test('eval runs with the fake provider from the command line', { timeout: SPAWN_TIMEOUT }, (t) => {
   const r = run(t, ['eval', join(ROOT, 'examples', 'cases.jsonl'), '--provider', 'fake', '--k', '1'], {
     env: { TOKENSHRINK_FAKE_REPLY: '{"answer":"ord_77031 GATEWAY_TIMEOUT 25"}' },
   });
@@ -80,7 +81,7 @@ test('eval runs with the fake provider from the command line', (t) => {
   assert.match(r.stdout, /compressed {2}pass@1 100 percent/);
 });
 
-test('auth status lists every connection type without secrets', (t) => {
+test('auth status lists every connection type without secrets', { timeout: SPAWN_TIMEOUT }, (t) => {
   const r = run(t, ['auth', 'status', '--json'], { env: { OPENAI_API_KEY: 'sk-should-not-print-123456' } });
   assert.equal(r.status, 0, r.stderr);
   assert.doesNotMatch(r.stdout, /sk-should-not-print/);
@@ -97,7 +98,7 @@ test('auth status lists every connection type without secrets', (t) => {
   assert.equal(run(t, ['auth', 'login']).status, 2);
 });
 
-test('mcp server answers over stdio', (t) => {
+test('mcp server answers over stdio', { timeout: SPAWN_TIMEOUT }, (t) => {
   const input = `${JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' })}\n`;
   const r = run(t, ['mcp'], { input });
   assert.equal(r.status, 0, r.stderr);

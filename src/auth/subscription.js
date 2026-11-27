@@ -2,7 +2,7 @@
 // starts those CLIs. It never reads, copies or reuses the tokens they store, and never calls a
 // vendor API with them.
 
-import { claudeArgs, parseClaudeOutput } from '../provider/claude-cli.js';
+import { claudeArgs, parseClaudeOutput, writeSystemFile } from '../provider/claude-cli.js';
 import { makeWorkDir, removeWorkDir, runProcess } from '../provider/subprocess.js';
 
 export const VENDORS = {
@@ -44,7 +44,7 @@ export async function claudeSignedIn(bin, deps = {}) {
 export async function claudeProbe(bin, deps = {}) {
   const dir = makeWorkDir();
   try {
-    const r = await runProcess(bin, claudeArgs({ system: 'Reply with the single word ok.' }), {
+    const r = await runProcess(bin, claudeArgs({ systemFile: writeSystemFile(dir, 'Reply with the single word ok.') }), {
       input: 'ok?',
       cwd: dir,
       timeoutMs: 120000,

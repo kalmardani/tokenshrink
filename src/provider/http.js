@@ -23,10 +23,16 @@ export async function requestJson(url, init = {}, opts = {}) {
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt++) {
     let res;
+    let text;
+    // A plain timer rather than AbortSignal.timeout(). The latter is unref'd, so a hung call
+    // could let the process exit with the promise still pending instead of timing out.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(new DOMException('timed out', 'TimeoutError')), timeoutMs);
     try {
-      res = await fetchImpl(url, { ...init, signal: AbortSignal.timeout(timeoutMs) });
+      res = await fetchImpl(url, { ...init, signal: controller.signal });
+      text = await res.text();
     } catch (err) {
-      const timedOut = err?.name === 'TimeoutError' || err?.name === 'AbortError';
+      const timedOut = controller.signal.aborted || err?.name === 'TimeoutError' || err?.name === 'AbortError';
       lastError = new HttpError(timedOut ? `request timed out after ${timeoutMs} ms` : `network error: ${err?.message ?? err}`, {
         retryable: true,
       });
@@ -35,8 +41,9 @@ export async function requestJson(url, init = {}, opts = {}) {
         continue;
       }
       throw lastError;
+    } finally {
+      clearTimeout(timer);
     }
-    const text = await res.text();
     let body = null;
     if (text) {
       try {

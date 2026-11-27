@@ -5,9 +5,14 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { createProxy } from '../src/proxy.js';
 import { openStore, expand, findMarkers } from '../src/index.js';
-import { example, tempDir } from './helpers.js';
+import { example, tempDir, SPAWN_TIMEOUT } from './helpers.js';
 
 const SECRET = 'sk-test-0123456789abcdefSECRET';
+
+function closeServer(server) {
+  server.closeAllConnections?.();
+  return new Promise((resolve) => server.close(() => resolve()));
+}
 
 function listen(server) {
   return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server.address().port)));
@@ -24,7 +29,7 @@ function fakeUpstream(t, handler) {
       handler(req, res, body);
     });
   });
-  t.after(() => server.close());
+  t.after(() => closeServer(server));
   return { server, seen };
 }
 
@@ -44,10 +49,9 @@ function send(port, { path = '/v1/chat/completions', method = 'POST', headers = 
   });
 }
 
-test('proxy compresses large tool content, forwards auth untouched, returns the answer unchanged', async (t) => {
+test('proxy compresses large tool content, forwards auth untouched, returns the answer unchanged', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const dir = tempDir(t);
   const store = openStore({ dir });
-  t.after(() => store.close());
   const answer = JSON.stringify({ id: 'x', choices: [{ message: { role: 'assistant', content: 'done' } }] });
   const up = fakeUpstream(t, (req, res) => {
     res.writeHead(200, { 'content-type': 'application/json', 'x-upstream': 'yes' });
@@ -55,40 +59,46 @@ test('proxy compresses large tool content, forwards auth untouched, returns the 
   });
   const upPort = await listen(up.server);
   const proxy = createProxy({ upstream: `http://127.0.0.1:${upPort}`, store, threshold: 500 });
-  t.after(() => proxy.close());
   const port = await listen(proxy);
-  const log = example('app.log');
-  const payload = {
-    model: 'm',
-    messages: [
-      { role: 'system', content: 'be brief' },
-      { role: 'user', content: 'what failed?' },
-      { role: 'tool', tool_call_id: 'c1', content: log },
-      { role: 'user', content: [{ type: 'text', text: example('users.json') }] },
-    ],
-  };
-  const res = await send(port, { headers: { authorization: `Bearer ${SECRET}` }, body: JSON.stringify(payload) });
-  assert.equal(res.status, 200);
-  assert.equal(res.body, answer);
-  assert.equal(res.headers['x-upstream'], 'yes');
-  const got = up.seen[0];
-  assert.equal(got.headers.authorization, `Bearer ${SECRET}`);
-  assert.equal(got.url, '/v1/chat/completions');
-  const sent = JSON.parse(got.body);
-  assert.equal(sent.messages[0].content, 'be brief');
-  assert.equal(sent.messages[1].content, 'what failed?');
-  assert.match(sent.messages[2].content, /^\[tokenshrink ts:[0-9a-f]{8} log/);
-  assert.ok(sent.messages[2].content.length < log.length / 10);
-  assert.match(sent.messages[3].content[0].text, /^\[tokenshrink ts:[0-9a-f]{8} json/);
-  const handle = findMarkers(sent.messages[2].content)[0];
-  assert.ok(expand(handle.text, { store }).length > 0);
+  try {
+    const log = example('app.log');
+    const payload = {
+      model: 'm',
+      messages: [
+        { role: 'system', content: 'be brief' },
+        { role: 'user', content: 'what failed?' },
+        { role: 'tool', tool_call_id: 'c1', content: log },
+        { role: 'user', content: [{ type: 'text', text: example('users.json') }] },
+      ],
+    };
+    const res = await send(port, { headers: { authorization: `Bearer ${SECRET}` }, body: JSON.stringify(payload) });
+    assert.equal(res.status, 200);
+    assert.equal(res.body, answer);
+    assert.equal(res.headers['x-upstream'], 'yes');
+    const got = up.seen[0];
+    assert.equal(got.headers.authorization, `Bearer ${SECRET}`);
+    assert.equal(got.url, '/v1/chat/completions');
+    const sent = JSON.parse(got.body);
+    assert.equal(sent.messages[0].content, 'be brief');
+    assert.equal(sent.messages[1].content, 'what failed?');
+    assert.match(sent.messages[2].content, /^\[tokenshrink ts:[0-9a-f]{8} log/);
+    assert.ok(sent.messages[2].content.length < log.length / 10);
+    assert.match(sent.messages[3].content[0].text, /^\[tokenshrink ts:[0-9a-f]{8} json/);
+    const handle = findMarkers(sent.messages[2].content)[0];
+    assert.ok(expand(handle.text, { store }).length > 0);
+  } finally {
+    // Close the proxy and the store before the temp dir is removed. Windows refuses to delete
+    // a database file that is still open.
+    await closeServer(proxy);
+    store.close();
+  }
   // Nothing in the store files contains the key.
   for (const f of readdirSync(dir)) {
     assert.ok(!readFileSync(join(dir, f)).toString('latin1').includes(SECRET), f);
   }
 });
 
-test('proxy streams server sent events through chunk by chunk', async (t) => {
+test('proxy streams server sent events through chunk by chunk', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const up = fakeUpstream(t, (req, res) => {
     res.writeHead(200, { 'content-type': 'text/event-stream' });
     let i = 0;
@@ -102,7 +112,7 @@ test('proxy streams server sent events through chunk by chunk', async (t) => {
   });
   const upPort = await listen(up.server);
   const proxy = createProxy({ upstream: `http://127.0.0.1:${upPort}`, store: null });
-  t.after(() => proxy.close());
+  t.after(() => closeServer(proxy));
   const port = await listen(proxy);
   const res = await send(port, { body: JSON.stringify({ model: 'm', stream: true, messages: [{ role: 'user', content: 'hi' }] }) });
   assert.equal(res.body, 'data: {"n":0}\n\ndata: {"n":1}\n\ndata: {"n":2}\n\ndata: [DONE]\n\n');
@@ -110,14 +120,14 @@ test('proxy streams server sent events through chunk by chunk', async (t) => {
   assert.equal(up.seen[0].body, JSON.stringify({ model: 'm', stream: true, messages: [{ role: 'user', content: 'hi' }] }));
 });
 
-test('proxy passes other paths and non JSON bodies through untouched, keeps upstream status', async (t) => {
+test('proxy passes other paths and non JSON bodies through untouched, keeps upstream status', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const up = fakeUpstream(t, (req, res) => {
     res.writeHead(req.url.endsWith('/v1/models') ? 200 : 429, { 'content-type': 'text/plain', 'retry-after': '3' });
     res.end(req.url.endsWith('/v1/models') ? 'models' : 'slow down');
   });
   const upPort = await listen(up.server);
   const proxy = createProxy({ upstream: `http://127.0.0.1:${upPort}/prefix`, store: null, threshold: 1 });
-  t.after(() => proxy.close());
+  t.after(() => closeServer(proxy));
   const port = await listen(proxy);
   const a = await send(port, { path: '/v1/models', method: 'GET' });
   assert.equal(a.body, 'models');
@@ -128,11 +138,11 @@ test('proxy passes other paths and non JSON bodies through untouched, keeps upst
   assert.equal(up.seen[1].body, 'not json at all');
 });
 
-test('proxy rejects foreign Host and Origin headers and oversized bodies', async (t) => {
+test('proxy rejects foreign Host and Origin headers and oversized bodies', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const up = fakeUpstream(t, (req, res) => res.end('ok'));
   const upPort = await listen(up.server);
   const proxy = createProxy({ upstream: `http://127.0.0.1:${upPort}`, store: null, maxBodyBytes: 100 });
-  t.after(() => proxy.close());
+  t.after(() => closeServer(proxy));
   const port = await listen(proxy);
   const a = await send(port, { headers: { host: 'evil.example' }, body: '{}' });
   assert.equal(a.status, 421);
@@ -143,12 +153,12 @@ test('proxy rejects foreign Host and Origin headers and oversized bodies', async
   assert.equal(up.seen.length, 0);
 });
 
-test('proxy answers 502 when the upstream is down', async (t) => {
+test('proxy answers 502 when the upstream is down', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const dead = createServer();
   const deadPort = await listen(dead);
   await new Promise((r) => dead.close(r));
   const proxy = createProxy({ upstream: `http://127.0.0.1:${deadPort}`, store: null });
-  t.after(() => proxy.close());
+  t.after(() => closeServer(proxy));
   const port = await listen(proxy);
   const res = await send(port, { body: '{}' });
   assert.equal(res.status, 502);

@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
 import { readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { pkcePair, login, getAccessToken, status, logout, validateTokenResponse, authorizationCodePkce } from '../src/auth/oauth.js';
 import { createTokenCache, cacheKey } from '../src/auth/token-cache.js';
 import { configDir } from '../src/auth/paths.js';
-import { tempDir } from './helpers.js';
+import { tempDir, SPAWN_TIMEOUT } from './helpers.js';
 
 const b64url = (b) => b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
@@ -83,7 +84,7 @@ test('token response schema check', () => {
   assert.match(validateTokenResponse([]), /object/);
 });
 
-test('client credentials with post and basic client auth, token cached with mode 0600', async (t) => {
+test('client credentials with post and basic client auth, token cached with mode 0600', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const { base, state } = await fakeAuthServer(t);
   const dir = tempDir(t);
   const cache = createTokenCache({ dir });
@@ -102,7 +103,7 @@ test('client credentials with post and basic client auth, token cached with mode
   await assert.rejects(login(bad, { cache }), /HTTP 401/);
 });
 
-test('expiry triggers refresh before use, and a failed refresh asks for login', async (t) => {
+test('expiry triggers refresh before use, and a failed refresh asks for login', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const { base, state } = await fakeAuthServer(t, { expiresIn: 120 });
   const cache = createTokenCache({ dir: tempDir(t) });
   const cfg = { grant: 'pkce', tokenUrl: `${base}/token`, authUrl: `${base}/authorize`, clientId: 'cid' };
@@ -126,7 +127,7 @@ test('expiry triggers refresh before use, and a failed refresh asks for login', 
   assert.equal(status(cfg, { cache }).loggedIn, false);
 });
 
-test('authorization code with PKCE over a loopback redirect, state checked', async (t) => {
+test('authorization code with PKCE over a loopback redirect, state checked', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const { base, state } = await fakeAuthServer(t);
   const cache = createTokenCache({ dir: tempDir(t) });
   const cfg = { grant: 'pkce', tokenUrl: `${base}/token`, authUrl: `${base}/authorize`, clientId: 'cid', scope: 'openid' };
@@ -174,7 +175,7 @@ test('authorization code with PKCE over a loopback redirect, state checked', asy
   );
 });
 
-test('device grant polls with authorization_pending and slows down on slow_down', async (t) => {
+test('device grant polls with authorization_pending and slows down on slow_down', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const { base, state } = await fakeAuthServer(t);
   const cache = createTokenCache({ dir: tempDir(t) });
   const cfg = { grant: 'device', tokenUrl: `${base}/token`, deviceUrl: `${base}/device`, clientId: 'cid', scope: 'api' };
@@ -194,12 +195,12 @@ test('device grant polls with authorization_pending and slows down on slow_down'
 test('config validation and config dir per platform', () => {
   assert.match(configDir({}, 'win32'), /tokenshrink$/);
   assert.equal(configDir({ APPDATA: 'C:\\Users\\a\\AppData\\Roaming' }, 'win32').includes('Roaming'), true);
-  assert.equal(configDir({ XDG_CONFIG_HOME: '/x/cfg' }, 'linux').startsWith('/x/cfg'), true);
+  assert.equal(configDir({ XDG_CONFIG_HOME: '/x/cfg' }, 'linux'), join('/x/cfg', 'tokenshrink'));
   assert.match(configDir({}, 'darwin'), /Library.Application Support.tokenshrink$/);
   return assert.rejects(login({ grant: 'device', tokenUrl: 'ftp://x', clientId: '' }, {}), { code: 'BAD_CONFIG' });
 });
 
-test('the token cache file never ends up in logs or status output', async (t) => {
+test('the token cache file never ends up in logs or status output', { timeout: SPAWN_TIMEOUT }, async (t) => {
   const dir = tempDir(t);
   const cache = createTokenCache({ dir });
   cache.set('k', { access_token: 'secret-token-value', expires_at: Date.now() + 1e6 });

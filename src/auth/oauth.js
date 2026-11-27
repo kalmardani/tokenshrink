@@ -154,7 +154,6 @@ function listenLoopback(port) {
 function waitForCallback(server, expectedState, timeoutMs) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new AuthError('TIMEOUT', 'no sign in callback within the time limit')), timeoutMs);
-    timer.unref?.();
     server.on('request', (req, res) => {
       const u = new URL(req.url, 'http://127.0.0.1');
       if (u.pathname !== '/callback') {

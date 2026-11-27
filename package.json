@@ -27,7 +27,7 @@
     "SECURITY.md"
   ],
   "scripts": {
-    "test": "node --test",
+    "test": "node --test --test-timeout=120000",
     "bench": "node scripts/bench.js",
     "examples": "node scripts/make-examples.js"
   }

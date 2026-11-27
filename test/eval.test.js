@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { loadCases, runEval, parseAnswer, score, formatReport } from '../src/eval.js';
 import { createFakeProvider } from '../src/provider/fake.js';
 import { openStore } from '../src/index.js';
-import { example, tempDir, ROOT } from './helpers.js';
+import { example, tempDir, ROOT, SPAWN_TIMEOUT } from './helpers.js';
 
 test('the shipped cases file loads', () => {
   const cases = loadCases(join(ROOT, 'examples', 'cases.jsonl'));
@@ -35,7 +35,7 @@ test('answer parsing validates the schema', () => {
   assert.equal(score(' 60 ', { expected: ['60'], match: 'exact' }), true);
 });
 
-test('runEval measures tokens and pass^k with retries and fail closed', async () => {
+test('runEval measures tokens and pass^k with retries and fail closed', { timeout: SPAWN_TIMEOUT }, async () => {
   const cases = [
     { id: 'c1', question: 'which order failed?', expected: ['ord_48213'], match: 'contains', context: example('app.log') },
     { id: 'c2', question: 'how many users?', expected: ['1000'], match: 'contains', context: example('users.json') },
@@ -71,7 +71,7 @@ test('runEval measures tokens and pass^k with retries and fail closed', async ()
   assert.match(formatReport(rep), /pass\^3/);
 });
 
-test('an always invalid model fails closed after one repair', async () => {
+test('an always invalid model fails closed after one repair', { timeout: SPAWN_TIMEOUT }, async () => {
   const provider = createFakeProvider(['not json']);
   const rep = await runEval({ cases: [{ id: 'x', question: 'q', expected: ['a'], match: 'contains', context: 'short context' }], provider, k: 2 });
   assert.equal(rep.cases[0].original.invalid, 2);

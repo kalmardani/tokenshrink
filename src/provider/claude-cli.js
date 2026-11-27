@@ -3,10 +3,14 @@
 // The model gets no tools, no MCP servers and no session persistence, so text it reads cannot
 // make it act.
 
+import { writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { looksTransient, flattenMessages, makeWorkDir, removeWorkDir, runProcess } from './subprocess.js';
 import { backoff } from './http.js';
 
-export function claudeArgs({ system, model }) {
+// The system prompt goes through a file, never as an argument, so multi line text with quotes
+// survives every platform, cmd.exe shims included.
+export function claudeArgs({ systemFile, model }) {
   const args = [
     '-p',
     '--output-format',
@@ -17,7 +21,7 @@ export function claudeArgs({ system, model }) {
     '--no-session-persistence',
     '--disable-slash-commands',
   ];
-  if (system) args.push('--system-prompt', system);
+  if (systemFile) args.push('--system-prompt-file', systemFile);
   if (model) {
     if (!/^[\w.:@/-]{1,100}$/.test(model)) throw new Error('model name has unexpected characters');
     args.push('--model', model);
@@ -52,8 +56,14 @@ export function parseClaudeOutput(stdout) {
   throw new Error('claude CLI output had no result object');
 }
 
+export function writeSystemFile(dir, system) {
+  if (!system) return null;
+  const file = join(dir, 'system-prompt.txt');
+  writeFileSync(file, system, 'utf8');
+  return file;
+}
+
 export async function completeClaudeCli(req, { config, deps }) {
-  const args = claudeArgs({ system: req.system, model: config.model });
   const prompt = flattenMessages(req.messages);
   const sleep = deps.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
   let last;
@@ -61,6 +71,7 @@ export async function completeClaudeCli(req, { config, deps }) {
     const dir = makeWorkDir();
     const started = Date.now();
     try {
+      const args = claudeArgs({ systemFile: writeSystemFile(dir, req.system), model: config.model });
       const r = await runProcess(config.claudeBin, args, { input: prompt, cwd: dir, timeoutMs: config.timeoutMs, spawnImpl: deps.spawn });
       if (r.code === 0) {
         const out = parseClaudeOutput(r.stdout);

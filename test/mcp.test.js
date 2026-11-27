@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { PassThrough } from 'node:stream';
 import { runMcpServer, createMcpHandler } from '../src/mcp.js';
 import { openStore, compress, findMarkers } from '../src/index.js';
-import { example } from './helpers.js';
+import { example, SPAWN_TIMEOUT } from './helpers.js';
 
 async function session(store, messages) {
   const input = new PassThrough();
@@ -17,7 +17,7 @@ async function session(store, messages) {
   return buf.trim().split('\n').map((l) => JSON.parse(l));
 }
 
-test('mcp initialize, tools/list and expand over stdio', async () => {
+test('mcp initialize, tools/list and expand over stdio', { timeout: SPAWN_TIMEOUT }, async () => {
   const store = openStore({ memory: true });
   const r = compress(example('app.log'), { store });
   const marker = findMarkers(r.text).find((m) => m.kind === 'lines');
@@ -43,7 +43,7 @@ test('mcp initialize, tools/list and expand over stdio', async () => {
   store.close();
 });
 
-test('mcp tool errors are structured and helpful', async () => {
+test('mcp tool errors are structured and helpful', { timeout: SPAWN_TIMEOUT }, async () => {
   const store = openStore({ memory: true });
   const handle = createMcpHandler({ store });
   const call = async (name, args) => (await handle({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name, arguments: args } })).result;

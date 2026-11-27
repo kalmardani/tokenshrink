@@ -6,11 +6,23 @@ import { findMarkers } from '../src/handles.js';
 import { splitLines } from '../src/plan.js';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+// Upper bound for any test that spawns a process or opens a socket, so a hang fails fast.
+export const SPAWN_TIMEOUT = 60000;
+
 export const example = (name) => readFileSync(join(ROOT, 'examples', name), 'utf8');
 
 export function tempDir(t) {
   const dir = mkdtempSync(join(tmpdir(), 'tokenshrink-test-'));
-  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  // Windows keeps a file locked while any handle is open, so tests close stores and servers
+  // first. The retries cover handles the OS releases a moment later.
+  t.after(() => {
+    try {
+      rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    } catch (err) {
+      // A leftover temp dir must not hide the real test result. It is reported instead.
+      t.diagnostic(`temp dir not removed: ${err.code ?? err.message}`);
+    }
+  });
   return dir;
 }
 
