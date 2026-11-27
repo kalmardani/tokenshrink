@@ -1,6 +1,6 @@
 {
   "name": "tokenshrink",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lossless, deterministic context compression for AI agents. Logs, JSON, HTML, CSV, stack traces and diffs shrink before they reach the model, every original stays expandable.",
   "type": "module",
   "bin": {

@@ -224,6 +224,8 @@ and if not starts that CLI's own interactive sign in in your terminal. tokenshri
 these CLIs as subprocesses and never reads, copies or reuses the tokens they store, nor calls a
 vendor API with them.
 
+Both CLIs run from an empty temporary folder, so the project instruction files of the folder you work in (CLAUDE.md, AGENTS.md and similar) are not sent to the model, while the user level settings of each CLI still load, for codex only what `--ignore-user-config` leaves in place.
+
 ### API key
 
 Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`, or name another env var with

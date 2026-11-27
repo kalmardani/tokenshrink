@@ -1,5 +1,7 @@
 // Run a vendor CLI as a subprocess. Argument array, never shell: true, prompt on stdin, hard
 // timeout, output size cap. Runs in a fresh empty temp dir so the CLI sees no project files.
+// The vendor CLIs load instruction files (CLAUDE.md, AGENTS.md and similar) from their working
+// directory and send them with every call, so the user's folder must never be the cwd.
 //
 // Windows. npm installs CLIs as .cmd shims, which CreateProcess cannot start directly. The
 // command is resolved with PATH and PATHEXT. An .exe is spawned directly. A .cmd or .bat goes
@@ -14,12 +16,14 @@ import { extname, join, win32 } from 'node:path';
 const MAX_OUTPUT = 20 * 1024 * 1024;
 
 export function makeWorkDir() {
-  return mkdtempSync(join(tmpdir(), 'tokenshrink-'));
+  return mkdtempSync(join(tmpdir(), 'tokenshrink-llm-'));
 }
 
+// Called from a finally block, so it also runs after an error or a timeout. The retries cover
+// Windows, where a killed process can hold the folder for a moment.
 export function removeWorkDir(dir) {
   try {
-    rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   } catch {
     // A leftover temp dir is harmless.
   }

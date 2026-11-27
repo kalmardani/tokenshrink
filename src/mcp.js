@@ -6,6 +6,7 @@ import { createInterface } from 'node:readline';
 import { compress } from './compress.js';
 import { parseHandle } from './handles.js';
 import { TYPES } from './detect.js';
+import { VERSION } from './version.js';
 
 export const SUPPORTED_VERSIONS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 const MAX_LINE = 8 * 1024 * 1024;
@@ -52,7 +53,7 @@ export const TOOLS = [
   },
 ];
 
-export function createMcpHandler({ store, name = 'tokenshrink', version = '0.1.0' }) {
+export function createMcpHandler({ store, name = 'tokenshrink', version = VERSION }) {
   return async function handleMessage(msg) {
     if (!msg || typeof msg !== 'object' || msg.jsonrpc !== '2.0' || typeof msg.method !== 'string') {
       return error(msg?.id ?? null, -32600, 'invalid request');

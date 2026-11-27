@@ -59,7 +59,7 @@ test('usage errors exit with 2 and unknown handles with 1', { timeout: SPAWN_TIM
   assert.equal(run(t, ['compress', '--nope']).status, 2);
   assert.equal(run(t, ['expand', 'nonsense']).status, 2);
   assert.equal(run(t, ['expand', 'ts:abcdef12']).status, 1);
-  assert.equal(run(t, ['--version']).stdout.trim(), '0.1.0');
+  assert.equal(run(t, ['--version']).stdout.trim(), '0.1.1');
   assert.match(run(t, ['--help']).stdout, /tokenshrink compress/);
 });
 

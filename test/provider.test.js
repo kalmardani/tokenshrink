@@ -2,8 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import { PassThrough } from 'node:stream';
-import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { isAbsolute, join, relative } from 'node:path';
 import { requestJson, redact, backoff } from '../src/provider/http.js';
 import { createProvider, resolveCredentials } from '../src/provider/index.js';
 import { claudeArgs, parseClaudeOutput } from '../src/provider/claude-cli.js';
@@ -207,6 +208,44 @@ test('codex-cli adapter reads the last message file', { timeout: SPAWN_TIMEOUT }
   assert.equal(r.text, 'final answer');
   assert.equal(r.usage.inputTokens, 9);
 });
+
+// The vendor CLIs read CLAUDE.md, AGENTS.md and similar files from their working directory, so
+// each call must run in its own fresh, empty folder under the OS temp dir, removed afterwards.
+function insideTmp(dir) {
+  const rel = relative(tmpdir(), dir);
+  return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel);
+}
+
+for (const provider of ['claude-cli', 'codex-cli']) {
+  test(`${provider} runs in a fresh empty temp dir and removes it, also on error`, { timeout: SPAWN_TIMEOUT }, async () => {
+    const seen = [];
+    const ok = fakeSpawn((bin, args, opts) => {
+      seen.push({ cwd: opts.cwd, existed: existsSync(opts.cwd), entries: readdirSync(opts.cwd).filter((f) => f !== 'system-prompt.txt') });
+      return provider === 'claude-cli'
+        ? { stdout: JSON.stringify({ type: 'result', result: 'pong', usage: {} }) }
+        : { stdout: '{"type":"turn.completed","usage":{}}\n', file: { path: (a) => a[a.indexOf('-o') + 1], text: 'pong' } };
+    });
+    const conf = cfg({ provider, model: null, auth: { type: 'subscription', oauth: {} } });
+    const r = await createProvider(conf, { spawn: ok }).complete({ system: 'sys', messages: [{ role: 'user', content: 'ping' }] });
+    assert.equal(r.text, 'pong');
+
+    const failing = fakeSpawn((bin, args, opts) => {
+      seen.push({ cwd: opts.cwd, existed: existsSync(opts.cwd), entries: [] });
+      return { code: 2, stderr: 'bad flag' };
+    });
+    await assert.rejects(createProvider(conf, { spawn: failing }).complete({ messages: [{ role: 'user', content: 'ping' }] }));
+
+    assert.equal(seen.length, 2);
+    for (const s of seen) {
+      assert.ok(insideTmp(s.cwd), `cwd ${s.cwd} is inside ${tmpdir()}`);
+      assert.notEqual(s.cwd, process.cwd());
+      assert.ok(s.existed, 'the folder exists while the CLI runs');
+      assert.deepEqual(s.entries, [], 'the folder holds no project files');
+      assert.ok(!existsSync(s.cwd), 'the folder is gone after the call');
+    }
+    assert.notEqual(seen[0].cwd, seen[1].cwd, 'every call gets its own folder');
+  });
+}
 
 test('subscription login checks install, probes, then starts the official sign in', { timeout: SPAWN_TIMEOUT }, async () => {
   const printed = [];

@@ -18,6 +18,7 @@ answer within a week. Supported version is the latest 0.x release.
   tokens with mode 0600. `tokenshrink auth logout` removes the entry. Tokens are never printed.
 - Sign ins of the official `claude` and `codex` CLIs are managed by those CLIs. tokenshrink does
   not read or reuse them.
+- Both CLIs run from an empty temporary folder, so the project instruction files of the folder you work in (CLAUDE.md, AGENTS.md and similar) are not sent to the model, while the user level settings of each CLI still load, for codex only what `--ignore-user-config` leaves in place.
 
 ## Threat model summary
 
