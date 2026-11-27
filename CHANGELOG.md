@@ -19,3 +19,5 @@ the project uses semantic versioning.
   an auth dimension with API keys, an OAuth 2.0 client (client credentials, PKCE with loopback
   redirect, device grant) with a token cache, and subscriptions through the official CLIs.
 - `auth login`, `auth login claude`, `auth login chatgpt`, `auth status`, `auth logout`.
+- Windows support for the vendor CLIs installed as `.cmd` shims, started through `cmd.exe` with
+  strict quoting instead of a shell string.

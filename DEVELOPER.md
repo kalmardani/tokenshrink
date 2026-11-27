@@ -232,7 +232,8 @@ Architecture decisions are in `docs/adr/`.
 ## 3. How to test
 
 ```
-node --test                    # 69 tests, node:test, no network, fake provider, local sockets only
+npm test                       # 71 tests, node:test, no network, fake provider, local sockets only
+node --experimental-sqlite --test   # the same on Node 22.5 to 22.12
 node scripts/bench.js          # README token table
 node scripts/make-examples.js  # regenerates examples/ deterministically
 ```
@@ -304,14 +305,14 @@ response is piped. This matches the decision table in 1.9.
 | Can be told in one paragraph | yes, 1.1 |
 | External services behind one module each | yes, provider/*, auth/*, store.js |
 | Import graph without cycles, no utils dump | yes, checked by reading the imports |
-| Non trivial decisions written down | ADR 0001 to 0006 |
+| Non trivial decisions written down | ADR 0001 to 0007 |
 | Schema with constraints | STRICT tables, CHECK on hash length, type, source, counts, FK with cascade |
 | Time in UTC | ISO 8601 UTC strings |
 | Secrets not in repo, logs or prompts | checked with a grep for key patterns, the store has no header column, tests scan the DB for the key |
 | All external input validated | handles by grammar, MCP arguments, cases file, token responses, eval answers, config file |
 | Parameterised SQL, no shell strings | yes, prepared statements, spawn with arrays and shell false |
 | Dependencies | none |
-| GitHub Actions pinned to SHA, minimal permissions | yes, checkout v4.2.2 and setup-node v4.4.0 SHAs checked with git ls-remote, contents read |
+| GitHub Actions pinned to SHA, minimal permissions | yes, checkout v7.0.1 and setup-node v7.1.0 SHAs checked with the GitHub API and git ls-remote, contents read |
 | Fail closed, no stack trace to the user | CLI prints one line errors, MCP returns structured tool errors |
 | LLM call timeout, token limit, validated output | timeout per call, max_tokens 300 in eval, schema check with one repair |
 | Model id logged | eval report lists the models the provider reported |
@@ -325,6 +326,9 @@ response is piped. This matches the decision table in 1.9.
 ## 5. Verified
 
 - 2026-11-27, `node --test` on macOS, Node 24.22.1. 69 tests, 69 pass.
+- 2026-11-27, after the first CI run. 71 tests, 71 pass on macOS with Node 24.22.1, Node 22.23.5
+  (`node --test`) and Node 22.5.1 (`node --experimental-sqlite --test`). The CLI on Node 22.5.1
+  compressed a file and printed stats without the flag, through its own re-run.
 - 2026-11-27, `node scripts/bench.js` on macOS, Node 24.22.1. Output is the README table.
 - 2026-11-27 14:03 UTC, real smoke test with the claude-cli adapter. Command
   `TOKENSHRINK_CONFIG_DIR=<temp> node bin/tokenshrink.js eval examples/cases.jsonl --provider claude-cli --k 2`.
@@ -348,13 +352,31 @@ response is piped. This matches the decision table in 1.9.
   started from the CLI, answered 502 with the JSON error for an unreachable upstream, and logged
   one line without content or headers.
 
+### First CI run, what failed and what changed
+
+- Node 22 on every OS. `requestJson` used `AbortSignal.timeout()`, whose timer is unref'd. On
+  Node 22 the timeout test left the event loop empty, the runner cancelled the rest of the
+  provider tests (`cancelledByParent`). The HTTP helper now uses an AbortController with a normal
+  timer that is cleared after the call.
+- Windows. The proxy test removed its temp dir while the SQLite file was still open (`EBUSY`).
+  Tests now close every store and server before cleanup, cleanup retries, and a leftover dir is
+  reported as a diagnostic instead of failing the run. Tests that spawn processes or open sockets
+  have a timeout, the runner has `--test-timeout`, and each CI job has `timeout-minutes`.
+- Windows product code. Vendor CLIs installed as `.cmd` shims are resolved with PATHEXT and
+  started through cmd.exe with strict quoting (ADR 0007). The claude system prompt moved from an
+  argument to `--system-prompt-file`.
+- CI actions moved to checkout v7.0.1 and setup-node v7.1.0 (Node 24 runtime), pinned by the
+  commit SHA from the GitHub API. A job on Node 22.5.1 checks the minimum version.
+
 ## 6. Known gaps and what was not verified
 
-- CI on Windows and Linux has not run yet, the repo has no remote. Windows specific paths
-  (`%APPDATA%`, `rundll32` browser open, finding `claude` and `codex` on PATH, file modes) are written for it but
-  untested on a Windows machine.
-- Node 22.5 to 22.12 with the automatic `--experimental-sqlite` re-run is not tested. Only Node
-  24.22.1 ran.
+- No Windows or Linux machine ran the code locally. CI covers both, its result after the fixes
+  below is for the owner to check. Windows specific paths (`%APPDATA%`, `rundll32` browser open,
+  `.cmd` shim quoting through cmd.exe, `taskkill` on timeout, file modes) are unit tested where
+  possible but were not run against a real Windows install of the vendor CLIs.
+- The claude CLI adapter now passes the system prompt with `--system-prompt-file`. The flag was
+  checked to exist (the CLI rejects a missing file before any model call), but no model call ran
+  with it after the smoke test, which used the older `--system-prompt` argument.
 - The real `codex-cli` adapter was not called. Only its argument list and its event parser are
   tested against made up output, the event format of the real CLI is assumed.
 - `auth login claude` and `auth login chatgpt` were tested with a fake spawn only. The real

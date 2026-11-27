@@ -321,7 +321,10 @@ same text than the estimate.
 - The store grows until you run `prune` or `forget`. It holds whatever tool output passed
   through, which can include secrets, so treat the data dir like the data itself.
 - `node:sqlite` is still experimental in Node. On Node 22.5 to 22.12 the CLI re-runs itself with
-  `--experimental-sqlite`, a library user has to pass that flag.
+  `--experimental-sqlite`, a library user has to pass that flag, and the tests run with
+  `node --experimental-sqlite --test`.
+- On Windows the official CLIs installed by npm are `.cmd` shims. tokenshrink starts them through
+  `cmd.exe` with strict quoting and never with a shell string (ADR 0007).
 - The proxy speaks the chat completions wire format only.
 - In eval, the claude CLI adds a fixed overhead of about 12 000 input tokens per call, which
   makes the measured saving look smaller than the context saving.
